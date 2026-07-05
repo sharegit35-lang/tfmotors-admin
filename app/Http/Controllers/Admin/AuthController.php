@@ -22,24 +22,20 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        // ព្យាយាម Login បញ្ចូលក្នុងប្រព័ន្ធ
-        if (auth()->attempt($credentials)) {
+        // ថែមពាក្យ true នៅទីនេះ ដើម្បីបង្ខំឲ្យប្រព័ន្ធចងចាំ (Remember Me) ជាប់រហូត
+        if (auth()->attempt($credentials, true)) {
             
-            // ប្រើប្រព័ន្ធ Spatie ដើម្បីឆែកមើលថាតើគាត់មានតួនាទីជា Admin ឬ Staff ដែរឬទេ
             if (auth()->user()->hasAnyRole(['Admin', 'Staff'])) {
                 $request->session()->regenerate();
-                return redirect()->route('admin.dashboard'); // លោតទៅ Dashboard
+                return redirect()->route('admin.dashboard');
             }
             
-            // បើគ្មានសិទ្ធិជា Admin ឬ Staff ទេ គឺបណ្តេញចេញវិញ
             auth()->logout();
             return back()->with('error', 'គណនីនេះមិនមានសិទ្ធិចូលប្រើប្រព័ន្ធឡើយ។');
         }
 
-        // បើវាយ Email ឬ Password ខុស
         return back()->with('error', 'អ៊ីមែល ឬលេខសម្ងាត់មិនត្រឹមត្រូវ។');
     }
-
     // សម្រាប់ Logout
     public function logout(Request $request)
     {
