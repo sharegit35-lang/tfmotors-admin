@@ -1,0 +1,53 @@
+/* ===============================
+   DataTables Custom Styling
+   =============================== */
+
+/* Dark header */
+thead.table-dark th {
+    background-color: #198754;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+    font-family: 'Noto Sans Khmer', sans-serif;
+}
+
+/* Table body cells */
+td {
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: 'Noto Sans Khmer', sans-serif;
+}
+
+/* Hover effect */
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Action buttons spacing */
+.btn-sm {
+    padding: 3px 8px;
+    font-size: 12px;
+    margin: 2px;
+}
+
+/* Responsive small screens */
+@media (max-width: 768px) {
+    table.dataTable td {
+        white-space: normal;
+        text-align: left;
+    }
+    .btn-sm {
+        font-size: 10px;
+        padding: 2px 5px;
+    }
+}
+.table-responsive table tbody tr {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.table-responsive table tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
