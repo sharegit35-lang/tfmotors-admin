@@ -370,13 +370,22 @@
                         <td class="px-5 py-4 border-l border-slate-50">
                             <div class="flex items-center justify-center gap-2">
                                 @role('Admin')
-                                    <a href="{{ route('admin.employees.edit', encrypt($employee->id)) }}" class="op-btn edit" title="Edit Profile">
-                                        <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24"><path d="M4 20l1-4.2L15.6 5.2a1.5 1.5 0 0 1 2.1 0l1.1 1.1a1.5 1.5 0 0 1 0 2.1L8.2 19l-4.2 1z"/><path d="M14.2 6.8l3 3"/></svg>
+                                    {{-- ប៊ូតុង Edit រៀបចំត្រឹមត្រូវតាមទម្រង់ដើម op-btn --}}
+                                    <a href="{{ route('admin.employees.edit', bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($employee->id))) }}" class="op-btn edit" title="Edit Record">
+                                        <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24">
+                                            <path d="M4 20l1-4.2L15.6 5.2a1.5 1.5 0 0 1 2.1 0l1.1 1.1a1.5 1.5 0 0 1 0 2.1L8.2 19l-4.2 1z"/>
+                                            <path d="M14.2 6.8l3 3"/>
+                                        </svg>
                                     </a>
-                                    <form action="{{ route('admin.employees.destroy', encrypt($employee->id)) }}" method="POST" class="inline">
-                                        @csrf @method('DELETE')
-                                        <button type="button" class="btn-delete-modern op-btn del" title="Delete Record">
-                                            <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>
+
+                                    {{-- ប៊ូតុង Delete ភ្ជាប់ជាមួយនឹង SweetAlert (btn-delete-modern) --}}
+                                    <form action="{{ route('admin.employees.destroy', bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($employee->id))) }}" method="POST" class="m-0 inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="op-btn del btn-delete-modern" title="Delete Record">
+                                            <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24">
+                                                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                            </svg>
                                         </button>
                                     </form>
                                 @else
@@ -447,6 +456,7 @@
             });
 
             // ប៊ូតុងលុបទិន្នន័យ (SweetAlert)
+            // ឥឡូវនេះវាដំណើរការយ៉ាងរលូនព្រោះបានដាក់ Class ត្រូវ
             $('.btn-delete-modern').on('click', function() {
                 const form = $(this).closest('form');
                 Swal.fire({

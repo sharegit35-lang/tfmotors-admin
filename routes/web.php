@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\UserController;
 
 // ==========================================
 // PUBLIC ROUTES
@@ -31,14 +34,16 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
     // ទំព័រ Dashboard
-    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // ទំព័រគ្រប់គ្រងបុគ្គលិក (យើងប្រើ Spatie ដើម្បីលាក់ប៊ូតុង Edit/Delete តាមសិទ្ធិនៅក្នុង Blade ផ្ទាល់)
+    // ទំព័រគ្រប់គ្រងបុគ្គលិក (ប្រើ Spatie ដើម្បីលាក់ប៊ូតុង Edit/Delete តាមសិទ្ធិនៅក្នុង Blade ផ្ទាល់)
     Route::resource('employees', EmployeeController::class);
 
-    Route::resource('assets', \App\Http\Controllers\Admin\AssetController::class);
+    // ទំព័រគ្រប់គ្រងទ្រព្យសម្បត្តិ
+    Route::resource('assets', AssetController::class);
     
 });
+
 
 // ==========================================
 // SYSTEM SECURITY ROUTES (ផ្តាច់មុខសម្រាប់តែ "Admin" ប៉ុណ្ណោះ)
@@ -46,6 +51,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
     
     // ទំព័រគ្រប់គ្រងគណនី (បើ Staff ព្យាយាមចូល វានឹងលោត Error 403 ភ្លាម)
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::resource('users', UserController::class);
     
 });

@@ -26,7 +26,7 @@
 
     .icon { display: inline-block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
-    /* ---- Consolidated field styles (replaces repeated utility strings) ---- */
+    /* ---- Consolidated field styles ---- */
     .f-label { display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
     .f-label.f-label--accent { color: var(--gold); }
 
@@ -120,7 +120,9 @@
 
     {{-- Form card --}}
     <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-10 w-full">
-        <form id="editEmployeeForm" action="{{ route('admin.employees.update', $employee->id) }}" method="POST">
+        
+        {{-- FIX: Added id="editEmployeeForm" back so the JS at the bottom works --}}
+        <form id="editEmployeeForm" action="{{ route('admin.employees.update', bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($employee->id))) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -134,27 +136,27 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="lg:col-span-2">
                         <label class="f-label">Full Name (English)</label>
-                        <input type="text" name="english_name" value="{{ $employee->english_name }}" class="f-input f-input--upper" required>
+                        <input type="text" name="english_name" value="{{ old('english_name', $employee->english_name) }}" class="f-input f-input--upper" required>
                     </div>
                     <div class="lg:col-span-2">
                         <label class="f-label">Full Name (Khmer)</label>
-                        <input type="text" name="khmer_name" id="khmerInput" value="{{ $employee->khmer_name }}" maxlength="100" class="f-input" required>
+                        <input type="text" name="khmer_name" id="khmerInput" value="{{ old('khmer_name', $employee->khmer_name) }}" maxlength="100" class="f-input" required>
                         <div class="text-right text-[10px] font-bold text-slate-400 mt-1.5" id="khmerCounter">0 / 100 Characters</div>
                     </div>
                     <div>
                         <label class="f-label">Gender</label>
                         <select name="gender" class="f-input" required>
-                            <option value="male" {{ strtolower($employee->gender) == 'male' ? 'selected' : '' }}>Male</option>
-                            <option value="female" {{ strtolower($employee->gender) == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="male" {{ (old('gender', strtolower($employee->gender)) == 'male') ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ (old('gender', strtolower($employee->gender)) == 'female') ? 'selected' : '' }}>Female</option>
                         </select>
                     </div>
                     <div>
                         <label class="f-label">Date of Birth</label>
-                        <input type="date" name="date_of_birth" value="{{ $employee->date_of_birth }}" class="f-input" required>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $employee->date_of_birth) }}" class="f-input" required>
                     </div>
                     <div class="lg:col-span-2">
                         <label class="f-label">Contact Number</label>
-                        <input type="tel" name="phone" id="phoneInput" value="{{ $employee->phone }}" class="f-input" oninput="this.value = this.value.replace(/[^0-9+\-\s]/g, '')" required>
+                        <input type="tel" name="phone" id="phoneInput" value="{{ old('phone', $employee->phone) }}" class="f-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
                 </div>
             </div>
@@ -168,11 +170,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="lg:col-span-2">
                         <label class="f-label">National ID Number</label>
-                        <input type="text" name="identity_card" value="{{ $employee->identity_card }}" class="f-input" required>
+                        <input type="text" name="identity_card" value="{{ old('identity_card', $employee->identity_card) }}" class="f-input" required>
                     </div>
                     <div class="lg:col-span-2">
                         <label class="f-label">Passport (Optional)</label>
-                        <input type="text" name="cambodian_passport" value="{{ $employee->cambodian_passport }}" class="f-input">
+                        <input type="text" name="cambodian_passport" value="{{ old('cambodian_passport', $employee->cambodian_passport) }}" class="f-input">
                     </div>
                 </div>
             </div>
@@ -186,46 +188,46 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="lg:col-span-2">
                         <label class="f-label">Position</label>
-                        <input type="text" name="position" value="{{ $employee->position }}" class="f-input" required>
+                        <input type="text" name="position" value="{{ old('position', $employee->position) }}" class="f-input" required>
                     </div>
                     <div class="lg:col-span-2">
                         <label class="f-label">Department</label>
-                        <input type="text" name="department_name" value="{{ $employee->department_name }}" class="f-input" required>
+                        <input type="text" name="department_name" value="{{ old('department_name', $employee->department_name) }}" class="f-input" required>
                     </div>
                     <div>
                         <label class="f-label">Corporate Branch</label>
                         <select name="branch_name" class="f-input" required>
-                            <option value="Headquarters" {{ $employee->branch_name == 'Headquarters' ? 'selected' : '' }}>Headquarters (Phnom Penh)</option>
-                            <option value="Siem Reap" {{ $employee->branch_name == 'Siem Reap' ? 'selected' : '' }}>Siem Reap Branch</option>
-                            <option value="Battambang" {{ $employee->branch_name == 'Battambang' ? 'selected' : '' }}>Battambang Branch</option>
-                            <option value="MH" {{ $employee->branch_name == 'MH' ? 'selected' : '' }}>MH Service Center</option>
-                            <option value="Vive Motors" {{ $employee->branch_name == 'Vive Motors' ? 'selected' : '' }}>Vive Motors</option>
+                            <option value="Headquarters" {{ old('branch_name', $employee->branch_name) == 'Headquarters' ? 'selected' : '' }}>Headquarters (Phnom Penh)</option>
+                            <option value="Siem Reap" {{ old('branch_name', $employee->branch_name) == 'Siem Reap' ? 'selected' : '' }}>Siem Reap Branch</option>
+                            <option value="Battambang" {{ old('branch_name', $employee->branch_name) == 'Battambang' ? 'selected' : '' }}>Battambang Branch</option>
+                            <option value="MH" {{ old('branch_name', $employee->branch_name) == 'MH' ? 'selected' : '' }}>MH Service Center</option>
+                            <option value="Vive Motors" {{ old('branch_name', $employee->branch_name) == 'Vive Motors' ? 'selected' : '' }}>Vive Motors</option>
                         </select>
                     </div>
                     <div>
                         <label class="f-label">Category Group</label>
                         <select name="branch_code" class="f-input" required>
-                            <option value="2W" {{ $employee->branch_code == '2W' ? 'selected' : '' }}>Automotive (2W)</option>
-                            <option value="4W" {{ $employee->branch_code == '4W' ? 'selected' : '' }}>Automotive (4W)</option>
-                            <option value="Support" {{ $employee->branch_code == 'Support' ? 'selected' : '' }}>Corporate Support</option>
+                            <option value="2W" {{ old('branch_code', $employee->branch_code) == '2W' ? 'selected' : '' }}>Automotive (2W)</option>
+                            <option value="4W" {{ old('branch_code', $employee->branch_code) == '4W' ? 'selected' : '' }}>Automotive (4W)</option>
+                            <option value="Support" {{ old('branch_code', $employee->branch_code) == 'Support' ? 'selected' : '' }}>Corporate Support</option>
                         </select>
                     </div>
                     <div>
                         <label class="f-label f-label--accent">Effective Start Date</label>
-                        <input type="date" name="start_work" id="joinDateInput" value="{{ $employee->start_work }}" class="f-input f-input--highlight" required>
+                        <input type="date" name="start_work" id="joinDateInput" value="{{ old('start_work', $employee->start_work) }}" class="f-input f-input--highlight" required>
                     </div>
                     <div>
                         <label class="f-label">Manual Status Override</label>
                         <select name="status" id="manualStatusSelect" class="f-input" style="font-weight: 700; background-color: #f1f5f9;">
-                            <option value="active" {{ strtolower($employee->status) == 'active' ? 'selected' : '' }}>ACTIVE / JOINED</option>
-                            <option value="probation" {{ strtolower($employee->status) == 'probation' ? 'selected' : '' }}>PROBATION / PENDING</option>
-                            <option value="can't join" {{ strtolower($employee->status) == "can't join" ? 'selected' : '' }}>CANCELLED</option>
-                            <option value="resigned" {{ strtolower($employee->status) == 'resigned' ? 'selected' : '' }}>RESIGNED</option>
+                            <option value="active" {{ old('status', strtolower($employee->status)) == 'active' ? 'selected' : '' }}>ACTIVE / JOINED</option>
+                            <option value="probation" {{ old('status', strtolower($employee->status)) == 'probation' ? 'selected' : '' }}>PROBATION / PENDING</option>
+                            <option value="can't join" {{ old('status', strtolower($employee->status)) == "can't join" ? 'selected' : '' }}>CANCELLED</option>
+                            <option value="resigned" {{ old('status', strtolower($employee->status)) == 'resigned' ? 'selected' : '' }}>RESIGNED</option>
                         </select>
                     </div>
                     <div class="lg:col-span-2">
                         <label class="f-label">Gross Salary (USD)</label>
-                        <input type="number" step="0.01" name="salary" value="{{ $employee->salary }}" class="f-input f-input--strong" required>
+                        <input type="number" step="0.01" name="salary" value="{{ old('salary', $employee->salary) }}" class="f-input f-input--strong" required>
                     </div>
                     <div class="lg:col-span-2">
                         <label class="f-label">System Status Insight</label>
@@ -300,12 +302,6 @@
     window.addEventListener('load', () => {
         syncStatusLogic();
         khmerCounter.innerText = `${khmerInput.value.length} / 100 Characters`;
-    });
-
-    const phoneInput = document.getElementById('phoneInput');
-    phoneInput.addEventListener('input', (e) => {
-        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : x[1] + ' ' + x[2] + (x[3] ? ' ' + x[3] : '');
     });
 
     document.getElementById('editEmployeeForm').addEventListener('submit', function () {

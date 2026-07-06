@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class EmployeeController extends Controller
 {
@@ -56,17 +58,39 @@ class EmployeeController extends Controller
 
     /**
      * Show the form for editing the specified employee.
-     */
-    public function edit(Employee $employee)
+     */public function edit($id)
     {
-        return view('employees.edit', compact('employee'));
+        try {
+            if (ctype_xdigit($id)) {
+                $decrypted_id = Crypt::decryptString(hex2bin($id));
+            } else {
+                $decrypted_id = Crypt::decryptString($id);
+            }
+            $employee = Employee::findOrFail($decrypted_id);
+            return view('employees.edit', compact('employee'));
+
+        } catch (\Exception $e) {
+            // យើងប្តូរពី 404 មកចេញអក្សរនេះវិញ ដើម្បីដឹងថាវាមកដល់ទីនេះឬអត់
+            dd("បញ្ហានៅ Controller! កូដ URL គឺ: " . $id . " | Error: " . $e->getMessage());
+        }
     }
 
     /**
      * Update the specified employee in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $id)
     {
+        try {
+            if (ctype_xdigit($id)) {
+                $decrypted_id = Crypt::decryptString(hex2bin($id));
+            } else {
+                $decrypted_id = Crypt::decryptString($id);
+            }
+            $employee = Employee::findOrFail($decrypted_id);
+        } catch (\Exception $e) {
+            abort(404, 'Employee not found or link is invalid.');
+        }
+
         $validated = $request->validate([
             'english_name'       => 'required|string|max:255',
             'khmer_name'         => 'required|string|max:255',
@@ -87,7 +111,6 @@ class EmployeeController extends Controller
 
         $employee->update($validated);
 
-        // ប្តូរពី employee.index ទៅ admin.employees.index
         return redirect()->route('admin.employees.index')
             ->with('success', 'Personnel record for ' . $employee->english_name . ' has been synchronized.');
     }
@@ -95,14 +118,41 @@ class EmployeeController extends Controller
     /**
      * Remove the specified employee from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroy($id)
     {
+        try {
+            if (ctype_xdigit($id)) {
+                $decrypted_id = Crypt::decryptString(hex2bin($id));
+            } else {
+                $decrypted_id = Crypt::decryptString($id);
+            }
+            $employee = Employee::findOrFail($decrypted_id);
+        } catch (\Exception $e) {
+            abort(404, 'Employee not found or link is invalid.');
+        }
+
         $employee->delete();
         
-        // ប្តូរពី employee.index ទៅ admin.employees.index
         return redirect()->route('admin.employees.index')
             ->with('success', 'Employee record permanently removed from registry.');
     }
 
-    // ... មុខងារ careers() និង apply() ទុកដដែលបាន ព្រោះវាជា Public Route
+    // ==========================================
+    // PUBLIC CAREER ROUTES
+    // ==========================================
+
+    /**
+     * សម្រាប់ឲ្យបេក្ខជនខាងក្រៅចូលមើលការងារ និងដាក់ពាក្យ
+     */
+    public function careers()
+    {
+        // Your logic to show jobs
+        return view('careers.index');
+    }
+
+    public function apply(Request $request)
+    {
+        // Your logic to process job applications
+        return back()->with('success', 'Application submitted!');
+    }
 }
