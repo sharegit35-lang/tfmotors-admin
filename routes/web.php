@@ -35,6 +35,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     // ទំព័រគ្រប់គ្រងបុគ្គលិក (យើងប្រើ Spatie ដើម្បីលាក់ប៊ូតុង Edit/Delete តាមសិទ្ធិនៅក្នុង Blade ផ្ទាល់)
     Route::resource('employees', EmployeeController::class);
+
+    Route::resource('assets', \App\Http\Controllers\Admin\AssetController::class);
     
 });
 

@@ -147,7 +147,7 @@
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto"
-                 x-data="{ openGroup: '{{ request()->routeIs('admin.employees.*') ? 'employees' : '' }}' }">
+                 x-data="{ openGroup: '{{ request()->routeIs('admin.employees.*') ? 'employees' : (request()->routeIs('admin.assets.*') ? 'assets' : '') }}' }">
 
                 {{-- Dashboard --}}
                 <a href="{{ route('admin.dashboard') }}"
@@ -230,6 +230,72 @@
                             <span>
                                 Add Employee
                                 <span class="block text-[10px] font-normal opacity-70 leading-none mt-0.5">បន្ថែមបុគ្គលិក</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Assets dropdown group --}}
+                <div>
+                    <button type="button"
+                            @click="openGroup = (openGroup === 'assets' ? '' : 'assets')"
+                            class="nav-link w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium
+                                   {{ request()->routeIs('admin.assets.*')
+                                       ? 'active bg-white/10 text-white'
+                                       : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                        <span class="flex items-center gap-3">
+                            <svg class="icon" style="width: 19px; height: 19px; color: var(--gold-light);" viewBox="0 0 24 24">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            <span>
+                                Assets
+                                <span class="block text-[10px] font-normal text-slate-400 leading-none mt-0.5">គ្រប់គ្រងទ្រព្យសម្បត្តិ</span>
+                            </span>
+                        </span>
+                        <svg class="icon nav-chevron" :class="openGroup === 'assets' ? 'open' : ''"
+                             style="width: 14px; height: 14px; color: #94a3b8;" viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+
+                    <div x-show="openGroup === 'assets'"
+                         x-collapse
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0"
+                         class="mt-1 ml-[22px] pl-4 border-l border-white/10 space-y-0.5"
+                         style="display: none;">
+
+                        <a href="{{ route('admin.assets.index') }}"
+                           class="nav-sublink flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm
+                                  {{ request()->routeIs('admin.assets.index') ? 'active font-semibold' : 'text-slate-400 hover:text-white' }}">
+                            <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                            <span>
+                                Asset List
+                                <span class="block text-[10px] font-normal opacity-70 leading-none mt-0.5">បញ្ជីទ្រព្យសម្បត្តិ</span>
+                            </span>
+                        </a>
+
+                        <a href="{{ route('admin.assets.create') }}"
+                           class="nav-sublink flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm
+                                  {{ request()->routeIs('admin.assets.create') ? 'active font-semibold' : 'text-slate-400 hover:text-white' }}">
+                            <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="12" y1="8" x2="12" y2="16"/>
+                                <line x1="8" y1="12" x2="16" y2="12"/>
+                            </svg>
+                            <span>
+                                Add Asset
+                                <span class="block text-[10px] font-normal opacity-70 leading-none mt-0.5">បញ្ចូលទ្រព្យថ្មី</span>
                             </span>
                         </a>
                     </div>
