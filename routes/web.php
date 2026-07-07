@@ -23,10 +23,9 @@ Route::post('/careers/apply', [EmployeeController::class, 'apply'])->name('caree
 // ==========================================
 // HIDDEN ADMIN AUTHENTICATION (លាក់ទ្វារចូល)
 // ==========================================
-// បងអាចប្តូរពាក្យ 'my-secret-access' ទៅជាអ្វីដែលបងតែម្នាក់ឯងដឹង
+// URL សម្ងាត់សម្រាប់ Login (មានតែបងទេដែលដឹង)
 Route::get('/my-secret-access', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/my-secret-access', [AuthController::class, 'login']);
-Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 
 // ==========================================
@@ -34,12 +33,16 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 // ==========================================
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
+    // មុខងារ Logout (ផ្លាស់ទីមកទីនេះ ព្រោះត្រូវ Login សិនទើបអាច Logout បាន)
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('employees', EmployeeController::class);
     Route::resource('assets', AssetController::class);
     Route::resource('jobs', JobPostController::class);
     
 });
+
 
 // ==========================================
 // SYSTEM SECURITY ROUTES (Admin តែប៉ុណ្ណោះ)

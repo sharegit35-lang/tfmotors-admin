@@ -471,8 +471,47 @@
             </header>
 
             <div class="app-content flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50">
-                {{-- ⚡️ បានបន្ថែម Global Components នៅទីនេះ --}}
-            
+                
+                {{-- ⚡️ Global Components: Session Alerts (Success & Error) --}}
+                @if(session('success'))
+                    <div x-data="{ show: true }" 
+                         x-show="show" 
+                         x-init="setTimeout(() => show = false, 4500)"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-2"
+                         class="mb-6 p-4 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 flex justify-between items-start shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="p-1.5 bg-teal-100 rounded-lg text-teal-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <span class="font-semibold text-sm">{{ session('success') }}</span>
+                        </div>
+                        <button @click="show = false" class="text-teal-400 hover:text-teal-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div x-data="{ show: true }" 
+                         x-show="show" 
+                         x-init="setTimeout(() => show = false, 5500)"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-2"
+                         class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex justify-between items-start shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="p-1.5 bg-rose-100 rounded-lg text-rose-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span class="font-semibold text-sm">{{ session('error') }}</span>
+                        </div>
+                        <button @click="show = false" class="text-rose-400 hover:text-rose-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                @endif
 
                 @yield('content')
             </div>

@@ -378,7 +378,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ url('/admin/login') }}">
+            <form action="{{ route('admin.login') }}" method="POST">
                 @csrf
 
                 <div class="field">

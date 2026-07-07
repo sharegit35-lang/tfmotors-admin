@@ -23,19 +23,22 @@ class AuthController extends Controller
         ]);
 
         // ថែមពាក្យ true នៅទីនេះ ដើម្បីបង្ខំឲ្យប្រព័ន្ធចងចាំ (Remember Me) ជាប់រហូត
-        if (auth()->attempt($credentials, true)) {
+        if (Auth::attempt($credentials, true)) {
             
-            if (auth()->user()->hasAnyRole(['Admin', 'Staff'])) {
+            if (Auth::user()->hasAnyRole(['Admin', 'Staff'])) {
                 $request->session()->regenerate();
-                return redirect()->route('admin.dashboard');
+                
+                // ⚡️ Update: ប្រើ intended() ដើម្បីឱ្យបទពិសោធន៍ប្រើប្រាស់កាន់តែរលូន
+                return redirect()->intended(route('admin.dashboard'));
             }
             
-            auth()->logout();
+            Auth::logout();
             return back()->with('error', 'គណនីនេះមិនមានសិទ្ធិចូលប្រើប្រព័ន្ធឡើយ។');
         }
 
         return back()->with('error', 'អ៊ីមែល ឬលេខសម្ងាត់មិនត្រឹមត្រូវ។');
     }
+    
     // សម្រាប់ Logout
     public function logout(Request $request)
     {
@@ -43,6 +46,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect('/admin/login');
+        // ⚡️ ប្រើប្រាស់ route('admin.login') ដើម្បីឱ្យវាលោតទៅរក URL ថ្មី (/my-secret-access) ដោយស្វ័យប្រវត្តិ
+        return redirect()->route('admin.login');
     }
 }
