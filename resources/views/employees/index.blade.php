@@ -118,7 +118,7 @@
         .gauge-ring { transform: rotate(-90deg); }
         .gauge-ring circle.track { stroke: #edf0f4; }
         .gauge-ring circle.fill {
-            stroke-dasharray: 150.8; /* 2*pi*24 */
+            stroke-dasharray: 150.8; 
             stroke-dashoffset: 150.8;
             stroke-linecap: round;
             transition: stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1);
@@ -159,18 +159,17 @@
             vertical-align: middle !important;
             background-color: transparent !important;
         }
+        
+        /* ⚡️ លុប Animation ពីទីនេះ ដើម្បីកុំឱ្យទាក់ពេលទិន្នន័យច្រើន */
         table.dataTable tbody tr,
         table.dataTable tbody tr.odd,
         table.dataTable tbody tr.even {
             background-color: #fff !important;
             transition: background-color 0.2s;
-            opacity: 0;
-            animation: row-in 0.4s ease forwards;
         }
         table.dataTable tbody tr:hover,
         table.dataTable tbody tr.odd:hover,
         table.dataTable tbody tr.even:hover { background-color: #fafbfc !important; }
-        @keyframes row-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
         .part-id {
             font-variant-numeric: tabular-nums;
@@ -178,9 +177,7 @@
         }
         tr.group:hover .part-id { color: var(--circuit); }
 
-        .odo {
-            font-variant-numeric: tabular-nums;
-        }
+        .odo { font-variant-numeric: tabular-nums; }
 
         .led-badge {
             display: inline-flex; align-items: center; gap: 0.4rem;
@@ -314,7 +311,8 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @foreach ($employees as $index => $employee)
-                    <tr class="group" style="animation-delay: {{ min($index * 0.035, 0.6) }}s;">
+                    {{-- ⚡️ លុប style animation-delay ចេញដើម្បីសម្រួលល្បឿន Render របស់ Browser --}}
+                    <tr class="group">
                         <td class="px-5 py-4 part-id font-mono border-r border-slate-50 transition-colors">#{{ str_pad($employee->id, 4, '0', STR_PAD_LEFT) }}</td>
                         <td class="px-5 py-4">
                             <div class="font-extrabold text-slate-800 text-base group-hover:text-[var(--circuit)] transition-colors">{{ $employee->english_name }}</div>
@@ -334,7 +332,6 @@
 
                         <td class="px-5 py-4">
                             @php
-                                $today = \Carbon\Carbon::today();
                                 $joinDate = $employee->start_work ? \Carbon\Carbon::parse($employee->start_work) : null;
                             @endphp
 
@@ -370,7 +367,6 @@
                         <td class="px-5 py-4 border-l border-slate-50">
                             <div class="flex items-center justify-center gap-2">
                                 @role('Admin')
-                                    {{-- ប៊ូតុង Edit រៀបចំត្រឹមត្រូវតាមទម្រង់ដើម op-btn --}}
                                     <a href="{{ route('admin.employees.edit', bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($employee->id))) }}" class="op-btn edit" title="Edit Record">
                                         <svg class="icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24">
                                             <path d="M4 20l1-4.2L15.6 5.2a1.5 1.5 0 0 1 2.1 0l1.1 1.1a1.5 1.5 0 0 1 0 2.1L8.2 19l-4.2 1z"/>
@@ -378,7 +374,6 @@
                                         </svg>
                                     </a>
 
-                                    {{-- ប៊ូតុង Delete ភ្ជាប់ជាមួយនឹង SweetAlert (btn-delete-modern) --}}
                                     <form action="{{ route('admin.employees.destroy', bin2hex(\Illuminate\Support\Facades\Crypt::encryptString($employee->id))) }}" method="POST" class="m-0 inline-block">
                                         @csrf
                                         @method('DELETE')
@@ -410,9 +405,10 @@
 
     <script>
         $(document).ready(function() {
-            // បើកដំណើរការ DataTables ជាមួយ Tailwind Styling
+            // បើកដំណើរការ DataTables ជាមួយ deferRender ដើម្បីឱ្យវា Render ទិន្នន័យបានលឿន
             $('#employeeTable').DataTable({
-                responsive: true,
+                responsive: false, // ⚡️ បិទ Responsive (ជាធម្មតាវាធ្វើឱ្យទាក់ខ្លាំងពេលមានទិន្នន័យច្រើន)
+                deferRender: true, // ⚡️ បើកមុខងារនេះដើម្បីឱ្យវាគណនាទិន្នន័យលឿន
                 pageLength: 10,
                 order: [[0, 'desc']],
                 language: { search: "", searchPlaceholder: "🔍 Search registry..." },
@@ -456,7 +452,6 @@
             });
 
             // ប៊ូតុងលុបទិន្នន័យ (SweetAlert)
-            // ឥឡូវនេះវាដំណើរការយ៉ាងរលូនព្រោះបានដាក់ Class ត្រូវ
             $('.btn-delete-modern').on('click', function() {
                 const form = $(this).closest('form');
                 Swal.fire({
