@@ -146,15 +146,8 @@ class EmployeeController extends Controller
     /**
      * សម្រាប់ឲ្យបេក្ខជនខាងក្រៅចូលមើលការងារ និងដាក់ពាក្យ
      */
-    public function careers()
-    {
-        // Your logic to show jobs
-        return view('careers.index');
-    }
-
-    public function apply(Request $request)
-    {
-        // Your logic to process job applications
-        return back()->with('success', 'Application submitted!');
-    }
+   public function careers() {
+    $jobs = \App\Models\JobPost::where('status', 'Open')->latest()->get();
+    return view('careers.index', compact('jobs'));
+}
 }
