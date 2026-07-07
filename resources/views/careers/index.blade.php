@@ -4,254 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Careers | TF Motors</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --ink: #0d1b2a;
-            --ink-soft: #1b2e42;
-            --paper: #f6f7f9;
-            --paper-raised: #ffffff;
-            --blue: #1859e0;
-            --blue-deep: #123f9e;
-            --line: #e2e5ea;
-            --slate: #5b6672;
+            --brand-dark: #0a101d;
+            --brand-blue: #2563eb;
+            --brand-blue-hover: #1d4ed8;
+            --surface-bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--paper);
-            color: var(--ink);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--surface-bg);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
         }
 
-        .font-display { font-family: 'Manrope', sans-serif; }
-        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
 
         [x-cloak] { display: none !important; }
 
-        /* ---------- Header ---------- */
-        .site-header {
-            border-bottom: 1px solid var(--line);
-            background: var(--paper-raised);
+        /* ---------- Custom Advanced Animations ---------- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ---------- Hero band ---------- */
-        .hero-band {
-            background: linear-gradient(155deg, var(--ink) 0%, var(--ink-soft) 60%, #16324a 100%);
+        @keyframes revealLine {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        .animate-fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+
+        /* ---------- Hero Section ---------- */
+        .hero-section {
+            background: radial-gradient(circle at top right, #1e293b 0%, var(--brand-dark) 100%);
             position: relative;
             overflow: hidden;
         }
-        .hero-band::before {
-            content: '';
+
+        .hero-glow {
             position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-            background-size: 44px 44px;
-            pointer-events: none;
-        }
-        /* Speed-line accent, evokes motion without being literal */
-        .speed-line {
-            position: absolute;
+            top: -20%;
             right: -10%;
-            top: 50%;
-            width: 140%;
-            height: 240px;
-            transform: translateY(-50%) rotate(-6deg);
-            background: linear-gradient(90deg, transparent, rgba(24, 89, 224, 0.16), transparent);
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
             pointer-events: none;
         }
 
-        /* ---------- Signature: spec-sheet job card ---------- */
-        .spec-card {
-            background: var(--paper-raised);
-            border: 1px solid var(--line);
-            border-radius: 1rem;
-            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-        }
-        .spec-card:hover {
-            border-color: var(--blue);
-            box-shadow: 0 20px 40px -20px rgba(13, 27, 42, 0.18);
-            transform: translateY(-2px);
-        }
-
-        .spec-row {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 0.5rem 0.75rem;
-            font-size: 0.78rem;
-        }
-        .spec-label {
-            font-family: 'IBM Plex Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--slate);
-        }
-        .spec-value {
-            font-family: 'IBM Plex Mono', monospace;
-            color: var(--ink);
-            font-weight: 500;
-        }
-
-        .btn-apply {
+        /* ---------- Job Cards ---------- */
+        .job-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.25rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
-            transition: all 0.25s ease;
         }
-        .btn-apply::after {
+
+        .job-card::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-            transition: left 0.5s ease;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: var(--brand-blue);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
         }
-        .btn-apply:hover::after { left: 100%; }
-        .btn-apply:hover { transform: translateY(-1px); box-shadow: 0 10px 20px -8px rgba(24, 89, 224, 0.45); }
 
-        .focus-ring:focus {
+        .job-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+            border-color: transparent;
+        }
+
+        .job-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* ---------- Form Inputs & Buttons ---------- */
+        .modern-input {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .modern-input:focus {
+            background: #ffffff;
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
             outline: none;
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(24, 89, 224, 0.15);
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .spec-card, .btn-apply, .btn-apply::after { transition: none !important; }
+        .btn-primary {
+            background: var(--brand-dark);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn-primary:hover {
+            background: var(--brand-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Custom Scrollbar for Modal */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body x-data="{ modalOpen: false, selectedJob: '', selectedDesc: '' }">
+<body x-data="{ modalOpen: false, selectedJob: '', selectedDesc: '' }" :class="modalOpen ? 'overflow-hidden' : ''">
 
-    {{-- ============ HEADER / LOGO ============ --}}
-    <header class="site-header">
-        <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-
-            {{-- Generated logo: mark + wordmark, no external image needed --}}
-            <a href="/" class="flex items-center gap-3">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="40" height="40" rx="10" fill="#0D1B2A"/>
-                    <path d="M9 27L14.5 13H18L21 22.5L24 13H27.5L33 27H29.2L26 18L23 27H19.8L17 18L14 27H9Z" fill="#F6F7F9"/>
-                    <rect x="9" y="29.5" width="22" height="2" rx="1" fill="#1859E0"/>
-                </svg>
-                <div class="leading-tight">
-                    <p class="font-display font-extrabold text-lg tracking-tight" style="color: var(--ink);">TF MOTORS</p>
-                    <p class="font-mono text-[10px] tracking-[0.25em] uppercase" style="color: var(--blue);">Careers</p>
+    {{-- ============ HEADER ============ --}}
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
+                    <svg width="24" height="24" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 27L14.5 13H18L21 22.5L24 13H27.5L33 27H29.2L26 18L23 27H19.8L17 18L14 27H9Z" fill="#F6F7F9"/>
+                        <rect x="9" y="29.5" width="22" height="2" rx="1" fill="#2563EB"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="font-display font-bold text-lg leading-none tracking-tight text-slate-900">TF MOTORS</p>
+                    <p class="text-[10px] tracking-[0.2em] uppercase font-bold text-blue-600 mt-1">Careers</p>
                 </div>
             </a>
-
-            <a href="mailto:hello@tfmotors.com" class="hidden sm:inline-flex items-center gap-2 text-sm font-medium" style="color: var(--slate);">
+            <a href="mailto:hello@tfmotors.com" class="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 hello@tfmotors.com
             </a>
         </div>
     </header>
 
     {{-- ============ HERO ============ --}}
-    <section class="hero-band">
-        <div class="speed-line"></div>
-        <div class="max-w-6xl mx-auto px-6 py-20 md:py-28 relative">
-            <p class="font-mono text-xs tracking-[0.25em] uppercase mb-5" style="color: #7ea6f2;">
-                Open Positions — {{ $jobs->count() ?? 0 }}
-            </p>
-            <h1 class="font-display font-extrabold text-4xl md:text-6xl leading-[1.08] max-w-2xl" style="color: #ffffff;">
-                Join the team behind every delivery.
-            </h1>
-            <p class="mt-6 max-w-lg text-base leading-relaxed" style="color: #aab8c9;">
-                From the showroom floor to the service bay, TF Motors runs on people who care about the details. Find your next role below.
-            </p>
+    <section class="hero-section text-white py-24 md:py-32">
+        <div class="hero-glow"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="max-w-3xl animate-fade-up">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold tracking-widest uppercase mb-6 text-blue-300">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    Open Positions: {{ $jobs->count() ?? 0 }}
+                </div>
+                <h1 class="font-display font-bold text-5xl md:text-7xl leading-[1.1] tracking-tight mb-6">
+                    Join the team behind <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">every delivery.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl font-medium">
+                    From the showroom floor to the service bay, TF Motors runs on people who care about the details. Find your next role below.
+                </p>
+            </div>
         </div>
     </section>
 
     {{-- ============ JOB LISTINGS ============ --}}
-    <section class="max-w-6xl mx-auto px-6 py-16 md:py-20">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            @forelse($jobs as $job)
-            <div class="spec-card p-7 flex flex-col justify-between">
-                <div>
-                    <p class="font-mono text-[11px] tracking-[0.2em] uppercase mb-3" style="color: var(--blue);">
-                        Open Role
-                    </p>
-                    <h2 class="font-display font-bold text-xl mb-4" style="color: var(--ink);">
-                        {{ $job->title }}
-                    </h2>
+    <section class="max-w-7xl mx-auto px-6 py-20 -mt-10 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($jobs as $index => $job)
+                <div class="job-card p-8 flex flex-col justify-between animate-fade-up" style="animation-delay: {{ $index * 100 }}ms;">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider rounded-md">
+                                {{ $job->employment_type }}
+                            </span>
+                        </div>
+                        
+                        <h2 class="font-display font-bold text-2xl text-slate-900 mb-4 leading-tight">
+                            {{ $job->title }}
+                        </h2>
 
-                    <div class="spec-row mb-3">
-                        <span class="spec-label">Type</span>
-                        <span class="spec-value">{{ strtoupper($job->employment_type) }}</span>
-                        <span class="spec-label">Location</span>
-                        <span class="spec-value">{{ $job->location }}</span>
-                        <span class="spec-label">Salary</span>
-                        <span class="spec-value">{{ $job->salary_range ?? 'COMPETITIVE' }}</span>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                {{ $job->location }}
+                            </div>
+                            <div class="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ $job->salary_range ?? 'Competitive Salary' }}
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-8">
+                            {{ Str::limit($job->description, 130) }}
+                        </p>
                     </div>
 
-                    <p class="text-sm leading-relaxed mt-4" style="color: var(--slate);">
-                        {{ Str::limit($job->description, 130) }}
-                    </p>
+                    <button @click="modalOpen = true; selectedJob = {{ Js::from($job->title) }}; selectedDesc = {{ Js::from($job->description) }}"
+                            class="w-full py-3.5 px-4 bg-slate-900 text-white text-sm font-bold rounded-xl transition-all hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30 flex items-center justify-center gap-2 group">
+                        Apply Now
+                        <svg class="w-4 h-4 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
                 </div>
-
-                <button @click="modalOpen = true; selectedJob = '{{ $job->title }}'; selectedDesc = '{{ addslashes($job->description) }}'"
-                        class="btn-apply mt-6 w-full py-3 rounded-lg text-sm font-semibold text-white"
-                        style="background: var(--blue);">
-                    Submit Application
-                </button>
-            </div>
             @empty
-            <div class="md:col-span-2 text-center py-24 rounded-2xl spec-card">
-                <p class="font-display font-bold text-xl mb-2" style="color: var(--ink);">No open roles right now.</p>
-                <p class="text-sm" style="color: var(--slate);">Check back soon, or send your resume directly to hello@tfmotors.com.</p>
-            </div>
+                <div class="md:col-span-2 lg:col-span-3 text-center py-24 bg-white rounded-3xl border border-slate-200 border-dashed animate-fade-up">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl text-slate-900 mb-2">No open roles right now</h3>
+                    <p class="text-slate-500 max-w-sm mx-auto">Check back soon, or send your resume directly to our team at hello@tfmotors.com.</p>
+                </div>
             @endforelse
         </div>
     </section>
 
     {{-- ============ APPLICATION MODAL ============ --}}
-    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d1b2a]/55 backdrop-blur-sm" x-cloak
-         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-        <div @click.outside="modalOpen = false"
-             x-transition:enter="transition ease-out duration-250"
-             x-transition:enter-start="opacity-0 translate-y-3"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             class="w-full max-w-lg rounded-2xl p-9 shadow-2xl" style="background: var(--paper-raised); border-top: 3px solid var(--blue);">
+    <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" x-cloak>
+        <!-- Backdrop -->
+        <div x-show="modalOpen" 
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0" 
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200" 
+             x-transition:leave-start="opacity-100" 
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+             @click="modalOpen = false"></div>
 
-            <p class="font-mono text-[11px] tracking-[0.2em] uppercase mb-2" style="color: var(--blue);">Application</p>
-            <h2 class="font-display font-extrabold text-2xl mb-6" style="color: var(--ink);" x-text="selectedJob"></h2>
-
-            <div class="mb-6 p-5 rounded-xl text-sm leading-relaxed max-h-36 overflow-y-auto"
-                 style="background: var(--paper); border: 1px solid var(--line); color: var(--slate);">
-                <p x-text="selectedDesc"></p>
+        <!-- Modal Panel -->
+        <div x-show="modalOpen" 
+             x-transition:enter="transition ease-out duration-300 delay-100" 
+             x-transition:enter-start="opacity-0 translate-y-8 scale-95" 
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200" 
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100" 
+             x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+             class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="px-8 py-6 border-b border-slate-100 flex items-start justify-between bg-slate-50/50">
+                <div>
+                    <p class="text-[10px] tracking-[0.2em] uppercase font-bold text-blue-600 mb-2">Application Form</p>
+                    <h2 class="font-display font-bold text-2xl text-slate-900 leading-tight" x-text="selectedJob"></h2>
+                </div>
+                <button @click="modalOpen = false" class="p-2 bg-white border border-slate-200 text-slate-400 rounded-full hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
 
-            <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="job_title" x-model="selectedJob">
-                <div class="space-y-3">
-                    <input type="text" name="name" placeholder="Full name"
-                           class="focus-ring w-full p-3.5 text-sm rounded-lg outline-none transition-all"
-                           style="border: 1px solid var(--line); background: var(--paper);" required>
-                    <input type="email" name="email" placeholder="Email address"
-                           class="focus-ring w-full p-3.5 text-sm rounded-lg outline-none transition-all"
-                           style="border: 1px solid var(--line); background: var(--paper);" required>
-
-                    <label class="block p-4 rounded-lg text-center cursor-pointer transition-colors"
-                           style="border: 1.5px dashed #c7cedb; background: var(--paper);">
-                        <span class="text-sm font-medium" style="color: var(--slate);">Attach résumé (PDF)</span>
-                        <input type="file" name="resume" class="hidden" required>
-                    </label>
-
-                    <button type="submit"
-                    
-                            class="btn-apply w-full py-3.5 rounded-lg font-semibold text-sm tracking-wide text-white"
-                            style="background: var(--ink);">
-                        Send Application
-                    </button>
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-8 overflow-y-auto custom-scrollbar">
+                
+                <div class="mb-8 p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Role Description
+                    </h3>
+                    <p x-text="selectedDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap"></p>
                 </div>
-            </form>
 
-            <button @click="modalOpen = false" class="mt-5 text-xs w-full text-center transition-colors" style="color: var(--slate);">
-                Cancel
-            </button>
+                <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                    @csrf
+                    <input type="hidden" name="job_title" x-model="selectedJob">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Full Name</label>
+                            <input type="text" name="name" placeholder="John Doe" class="modern-input w-full p-3.5 text-sm rounded-xl" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Email Address</label>
+                            <input type="email" name="email" placeholder="john@example.com" class="modern-input w-full p-3.5 text-sm rounded-xl" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">Resume (PDF)</label>
+                        <label class="flex flex-col items-center justify-center w-full p-6 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-colors group">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-700 group-hover:text-blue-600 transition-colors">Click to upload your resume</span>
+                            <span class="text-xs text-slate-500 mt-1">Maximum file size: 5MB</span>
+                            <input type="file" name="resume" class="hidden" required accept=".pdf">
+                        </label>
+                    </div>
+
+                    <div class="pt-4 mt-6 border-t border-slate-100 flex gap-3">
+                        <button type="button" @click="modalOpen = false" class="px-6 py-3.5 rounded-xl font-bold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors flex-1 sm:flex-none text-center">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary px-8 py-3.5 rounded-xl font-bold text-sm text-white flex-1 flex items-center justify-center gap-2">
+                            Submit Application
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
