@@ -150,4 +150,51 @@ class EmployeeController extends Controller
     $jobs = \App\Models\JobPost::where('status', 'Open')->latest()->get();
     return view('careers.index', compact('jobs'));
 }
+
+
+
+
+public function apply(Request $request)
+    {
+        // ១. Validate ទិន្នន័យ
+        $request->validate([
+            'job_title' => 'required|string',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email',
+            'resume'    => 'required|mimes:pdf|max:5120', // អនុញ្ញាតតែ PDF, អតិបរមា 5MB
+        ]);
+
+        try {
+            $token = env('TELEGRAM_BOT_TOKEN');
+            $chatId = env('TELEGRAM_CHAT_ID');
+
+            // ២. បាញ់សារអត្ថបទ (Text Message)
+            $message = "📢 *New Job Application Received!*\n\n";
+            $message .= "💼 *Position:* " . $request->job_title . "\n";
+            $message .= "👤 *Candidate:* " . $request->name . "\n";
+            $message .= "📧 *Email:* " . $request->email . "\n";
+
+            \Illuminate\Support\Facades\Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+                'chat_id' => $chatId,
+                'text' => $message,
+                'parse_mode' => 'Markdown',
+            ]);
+
+            // ៣. បាញ់ File CV (Document)
+            $file = $request->file('resume');
+            \Illuminate\Support\Facades\Http::attach(
+                'document', 
+                file_get_contents($file->getRealPath()), 
+                $file->getClientOriginalName()
+            )->post("https://api.telegram.org/bot{$token}/sendDocument", [
+                'chat_id' => $chatId,
+                'caption' => "📄 CV of " . $request->name . " for " . $request->job_title,
+            ]);
+
+            return back()->with('success', 'Application submitted successfully!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to send application. Please try again.');
+        }
+    }
 }

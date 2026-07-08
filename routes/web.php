@@ -40,6 +40,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('employees', EmployeeController::class);
     Route::resource('assets', AssetController::class);
     Route::resource('jobs', JobPostController::class);
+    Route::post('/jobs/{job}/toggle-status', [JobPostController::class, 'toggleStatus'])->name('jobs.toggle-status');
+Route::post('/jobs/{job}/toggle-urgent', [JobPostController::class, 'toggleUrgent'])->name('jobs.toggle-urgent');
+Route::post('/careers/apply', [EmployeeController::class, 'apply'])->name('careers.apply');
     
 });
 

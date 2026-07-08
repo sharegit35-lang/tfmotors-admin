@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Careers | TF Motors</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -20,10 +17,8 @@
         :root {
             --brand-dark: #0a101d;
             --brand-blue: #2563eb;
-            --brand-blue-hover: #1d4ed8;
             --surface-bg: #f8fafc;
             --text-main: #0f172a;
-            --text-muted: #64748b;
         }
 
         body {
@@ -37,25 +32,16 @@
 
         [x-cloak] { display: none !important; }
 
-        /* ---------- Custom Advanced Animations ---------- */
+        /* ---------- Advanced Animations ---------- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes revealLine {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
         }
 
         .animate-fade-up {
             animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
         }
-
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
 
         /* ---------- Hero Section ---------- */
         .hero-section {
@@ -78,31 +64,15 @@
         /* ---------- Job Cards ---------- */
         .job-card {
             background: #ffffff;
-            border: 1px solid #e2e8f0;
             border-radius: 1.25rem;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .job-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 4px;
-            background: var(--brand-blue);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-
         .job-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
-            border-color: transparent;
-        }
-
-        .job-card:hover::before {
-            transform: scaleX(1);
         }
 
         /* ---------- Form Inputs & Buttons ---------- */
@@ -119,24 +89,22 @@
             outline: none;
         }
 
-        .btn-primary {
-            background: var(--brand-dark);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary:hover {
-            background: var(--brand-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
-        }
-
-        /* Custom Scrollbar for Modal */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* ⚡️ ---------- រចនាប័ទ្មសម្រាប់បង្ហាញ HTML ចេញពី Editor (Quill Content) ---------- */
+        .quill-content h1, .quill-content h2, .quill-content h3 { font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; font-family: 'Space Grotesk', sans-serif; }
+        .quill-content h1 { font-size: 1.5rem; }
+        .quill-content h2 { font-size: 1.25rem; }
+        .quill-content p { margin-bottom: 0.75rem; line-height: 1.7; }
+        .quill-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; line-height: 1.7; }
+        .quill-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; line-height: 1.7; }
+        .quill-content li { margin-bottom: 0.25rem; }
+        .quill-content strong, .quill-content b { font-weight: 700; color: #0f172a; }
+        .quill-content em, .quill-content i { font-style: italic; }
+        .quill-content u { text-decoration: underline; }
+        .quill-content a { color: var(--brand-blue); text-decoration: underline; }
     </style>
 </head>
 <body x-data="{ modalOpen: false, selectedJob: '', selectedDesc: '' }" :class="modalOpen ? 'overflow-hidden' : ''">
@@ -186,12 +154,22 @@
     <section class="max-w-7xl mx-auto px-6 py-20 -mt-10 relative z-20">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($jobs as $index => $job)
-                <div class="job-card p-8 flex flex-col justify-between animate-fade-up" style="animation-delay: {{ $index * 100 }}ms;">
+                
+                <div class="job-card p-8 flex flex-col justify-between animate-fade-up 
+                            {{ $job->is_urgent ? 'border-2 border-rose-400 shadow-[0_0_20px_rgba(2fb,113,133,0.15)]' : 'border border-slate-200' }}" 
+                     style="animation-delay: {{ $index * 100 }}ms;">
                     <div>
-                        <div class="flex justify-between items-start mb-4">
+                        <div class="flex flex-wrap items-center gap-2 mb-4">
                             <span class="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider rounded-md">
                                 {{ $job->employment_type }}
                             </span>
+                            
+                            @if($job->is_urgent)
+                                <span class="px-3 py-1 bg-rose-50 text-rose-600 border border-rose-200 text-xs font-bold uppercase tracking-wider rounded-md flex items-center gap-1.5 animate-pulse shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg>
+                                    URGENT
+                                </span>
+                            @endif
                         </div>
                         
                         <h2 class="font-display font-bold text-2xl text-slate-900 mb-4 leading-tight">
@@ -209,13 +187,15 @@
                             </div>
                         </div>
 
+                        {{-- ⚡️ ប្រើ strip_tags ដើម្បីលុបកូដ HTML ចេញ ទុកតែអក្សរសុទ្ធសម្រាប់បង្ហាញជា Preview --}}
                         <p class="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-8">
-                            {{ Str::limit($job->description, 130) }}
+                            {{ Str::limit(strip_tags($job->description), 130) }}
                         </p>
                     </div>
 
                     <button @click="modalOpen = true; selectedJob = {{ Js::from($job->title) }}; selectedDesc = {{ Js::from($job->description) }}"
-                            class="w-full py-3.5 px-4 bg-slate-900 text-white text-sm font-bold rounded-xl transition-all hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30 flex items-center justify-center gap-2 group">
+                            class="w-full py-3.5 px-4 text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 group
+                            {{ $job->is_urgent ? 'bg-rose-600 hover:bg-rose-700 hover:shadow-lg hover:shadow-rose-500/30' : 'bg-slate-900 hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30' }}">
                         Apply Now
                         <svg class="w-4 h-4 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
@@ -234,7 +214,6 @@
 
     {{-- ============ APPLICATION MODAL ============ --}}
     <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" x-cloak>
-        <!-- Backdrop -->
         <div x-show="modalOpen" 
              x-transition:enter="transition ease-out duration-300" 
              x-transition:enter-start="opacity-0" 
@@ -245,7 +224,6 @@
              class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
              @click="modalOpen = false"></div>
 
-        <!-- Modal Panel -->
         <div x-show="modalOpen" 
              x-transition:enter="transition ease-out duration-300 delay-100" 
              x-transition:enter-start="opacity-0 translate-y-8 scale-95" 
@@ -255,7 +233,6 @@
              x-transition:leave-end="opacity-0 translate-y-4 scale-95"
              class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
             
-            <!-- Modal Header -->
             <div class="px-8 py-6 border-b border-slate-100 flex items-start justify-between bg-slate-50/50">
                 <div>
                     <p class="text-[10px] tracking-[0.2em] uppercase font-bold text-blue-600 mb-2">Application Form</p>
@@ -266,15 +243,15 @@
                 </button>
             </div>
 
-            <!-- Modal Body (Scrollable) -->
             <div class="p-8 overflow-y-auto custom-scrollbar">
-                
                 <div class="mb-8 p-5 rounded-2xl bg-slate-50 border border-slate-100">
                     <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
                         <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Role Description
                     </h3>
-                    <p x-text="selectedDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap"></p>
+                    
+                    {{-- ⚡️ ប្តូរពី x-text មកជា x-html និងបន្ថែម Class .quill-content សម្រាប់ CSS --}}
+                    <div x-html="selectedDesc" class="text-sm text-slate-600 leading-relaxed quill-content"></div>
                 </div>
 
                 <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
@@ -308,7 +285,7 @@
                         <button type="button" @click="modalOpen = false" class="px-6 py-3.5 rounded-xl font-bold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors flex-1 sm:flex-none text-center">
                             Cancel
                         </button>
-                        <button type="submit" class="btn-primary px-8 py-3.5 rounded-xl font-bold text-sm text-white flex-1 flex items-center justify-center gap-2">
+                        <button type="submit" class="w-full bg-slate-900 text-white hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30 transition-all px-8 py-3.5 rounded-xl font-bold text-sm flex-1 flex items-center justify-center gap-2">
                             Submit Application
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
