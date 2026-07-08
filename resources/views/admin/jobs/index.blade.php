@@ -110,7 +110,8 @@
     }
     .table-scroll { width: 100%; overflow-x: auto; }
 
-    table.data-table { width: 100%; border-collapse: collapse; min-width: 860px; }
+    table.data-table { width: 100%; border-collapse: collapse; min-width: 860px; table-layout: fixed; }
+    .data-table th, .data-table td { vertical-align: middle; }
     .data-table thead th {
         background: #f8fafc;
         border-bottom: 1px solid #e2e8f0;
@@ -119,24 +120,53 @@
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        padding: 1rem 1.5rem;
+        padding: 0.9rem 1.5rem;
         white-space: nowrap;
+        height: 56px;
     }
     .data-table tbody tr {
         border-bottom: 1px solid #f1f5f9;
         transition: background 0.2s ease;
+        height: 64px;
     }
     .data-table tbody tr:last-child { border-bottom: none; }
     .data-table tbody tr:hover { background: #f8fafc; }
     .data-table tbody td {
-        padding: 1rem 1.5rem;
+        padding: 0.9rem 1.5rem;
         font-size: 0.9rem;
         color: #334155;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
+
+    /* Explicit column widths so header and data cells always line up,
+       regardless of how long any single value is */
+    .data-table col.col-title  { width: 26%; }
+    .data-table col.col-type   { width: 14%; }
+    .data-table col.col-loc    { width: 16%; }
+    .data-table col.col-status { width: 15%; }
+    .data-table col.col-urgent { width: 16%; }
+    .data-table col.col-action { width: 13%; }
 
     .row-title { font-weight: 700; color: #1e293b; }
     .row-meta { color: #64748b; }
+
+    /* Type / Location shown as small neutral chips instead of bare text,
+       so every row reads as consistent "data", not mixed plain text */
+    .data-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.65rem;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #475569;
+    }
+    .data-chip svg { width: 0.85rem; height: 0.85rem; color: #94a3b8; flex-shrink: 0; }
 
     /* ---------- Toggle switch (used for both Status and Urgent) ---------- */
     .switch-form { display: inline-flex; align-items: center; }
@@ -364,6 +394,14 @@
 
         <div class="table-scroll">
             <table class="data-table">
+                <colgroup>
+                    <col class="col-title">
+                    <col class="col-type">
+                    <col class="col-loc">
+                    <col class="col-status">
+                    <col class="col-urgent">
+                    <col class="col-action">
+                </colgroup>
                 <thead>
                     <tr>
                         <th>
@@ -399,8 +437,18 @@
                     @forelse($jobs as $job)
                     <tr>
                         <td class="row-title">{{ $job->title }}</td>
-                        <td class="row-meta">{{ $job->employment_type }}</td>
-                        <td class="row-meta">{{ $job->location }}</td>
+                        <td>
+                            <span class="data-chip">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                {{ $job->employment_type }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="data-chip">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                {{ $job->location }}
+                            </span>
+                        </td>
 
                         {{-- Status switch --}}
                         <td>
