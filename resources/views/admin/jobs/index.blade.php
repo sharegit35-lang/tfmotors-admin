@@ -110,8 +110,14 @@
     }
     .table-scroll { width: 100%; overflow-x: auto; }
 
-    table.data-table { width: 100%; border-collapse: collapse; min-width: 860px; table-layout: fixed; }
+    table.data-table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        min-width: 860px; 
+        table-layout: fixed; 
+    }
     .data-table th, .data-table td { vertical-align: middle; }
+    
     .data-table thead th {
         background: #f8fafc;
         border-bottom: 1px solid #e2e8f0;
@@ -123,7 +129,12 @@
         padding: 0.9rem 1.5rem;
         white-space: nowrap;
         height: 56px;
+        text-align: left; /* ⚡️ បង្ខំឱ្យ Header នៅខាងឆ្វេងជានិច្ច */
     }
+    .data-table thead th.text-right {
+        text-align: right; /* ⚡️ សម្រាប់ Action Column */
+    }
+
     .data-table tbody tr {
         border-bottom: 1px solid #f1f5f9;
         transition: background 0.2s ease;
@@ -131,6 +142,7 @@
     }
     .data-table tbody tr:last-child { border-bottom: none; }
     .data-table tbody tr:hover { background: #f8fafc; }
+    
     .data-table tbody td {
         padding: 0.9rem 1.5rem;
         font-size: 0.9rem;
@@ -138,22 +150,16 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-align: left; /* ⚡️ បង្ខំឱ្យ Data នៅខាងឆ្វេងជានិច្ច */
     }
-
-    /* Explicit column widths so header and data cells always line up,
-       regardless of how long any single value is */
-    .data-table col.col-title  { width: 26%; }
-    .data-table col.col-type   { width: 14%; }
-    .data-table col.col-loc    { width: 16%; }
-    .data-table col.col-status { width: 15%; }
-    .data-table col.col-urgent { width: 16%; }
-    .data-table col.col-action { width: 13%; }
+    .data-table tbody td.text-right {
+        text-align: right;
+    }
 
     .row-title { font-weight: 700; color: #1e293b; }
     .row-meta { color: #64748b; }
 
-    /* Type / Location shown as small neutral chips instead of bare text,
-       so every row reads as consistent "data", not mixed plain text */
+    /* Type / Location shown as small neutral chips */
     .data-chip {
         display: inline-flex;
         align-items: center;
@@ -168,7 +174,7 @@
     }
     .data-chip svg { width: 0.85rem; height: 0.85rem; color: #94a3b8; flex-shrink: 0; }
 
-    /* ---------- Toggle switch (used for both Status and Urgent) ---------- */
+    /* ---------- Toggle switch ---------- */
     .switch-form { display: inline-flex; align-items: center; }
     .switch-btn {
         all: unset;
@@ -199,11 +205,8 @@
         transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Status switch: emerald when Open */
     .switch-track.is-on-status { background: #10b981; }
     .switch-track.is-on-status::after { transform: translateX(18px); }
-
-    /* Urgent switch: rose when urgent */
     .switch-track.is-on-urgent { background: #f43f5e; }
     .switch-track.is-on-urgent::after { transform: translateX(18px); }
 
@@ -246,7 +249,7 @@
         margin: 0 auto 0.9rem;
     }
 
-    /* ---------- Datatable toolbar (entries-per-page + search) ---------- */
+    /* ---------- Datatable toolbar ---------- */
     .dt-toolbar {
         display: flex;
         flex-wrap: wrap;
@@ -367,7 +370,7 @@
 
     <div class="table-card animate-item-1">
 
-        {{-- Toolbar: entries-per-page + search, matches System Users page --}}
+        {{-- Toolbar --}}
         <div class="dt-toolbar">
             <form method="GET" action="{{ route('admin.jobs.index') }}" class="dt-entries">
                 <span>បង្ហាញ</span>
@@ -377,7 +380,6 @@
                     @endforeach
                 </select>
                 <span>entries per page</span>
-                {{-- preserve current search when changing page size --}}
                 @if(request('search'))
                     <input type="hidden" name="search" value="{{ request('search') }}">
                 @endif
@@ -394,40 +396,33 @@
 
         <div class="table-scroll">
             <table class="data-table">
-                <colgroup>
-                    <col class="col-title">
-                    <col class="col-type">
-                    <col class="col-loc">
-                    <col class="col-status">
-                    <col class="col-urgent">
-                    <col class="col-action">
-                </colgroup>
+                {{-- ⚡️ កំណត់ទំហំ Column ផ្ទាល់លើ <th> ជំនួសការប្រើ <colgroup> --}}
                 <thead>
                     <tr>
-                        <th>
+                        <th style="width: 26%;">
                             <a href="{{ route('admin.jobs.index', array_merge(request()->query(), ['sort' => 'title', 'dir' => request('sort') === 'title' && request('dir') === 'asc' ? 'desc' : 'asc'])) }}" class="th-sort {{ request('sort') === 'title' ? 'active' : '' }}">
                                 ចំណងជើងការងារ
                                 <svg class="sort-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"/></svg>
                             </a>
                             <span class="th-en">TITLE</span>
                         </th>
-                        <th>
+                        <th style="width: 14%;">
                             ប្រភេទ
                             <span class="th-en">TYPE</span>
                         </th>
-                        <th>
+                        <th style="width: 16%;">
                             ទីតាំង
                             <span class="th-en">LOCATION</span>
                         </th>
-                        <th>
+                        <th style="width: 15%;">
                             ស្ថានភាព
                             <span class="th-en">STATUS</span>
                         </th>
-                        <th>
+                        <th style="width: 16%;">
                             ភាពបន្ទាន់
                             <span class="th-en">PRIORITY</span>
                         </th>
-                        <th class="text-right">
+                        <th style="width: 13%;" class="text-right">
                             សកម្មភាព
                             <span class="th-en">ACTIONS</span>
                         </th>
@@ -511,7 +506,7 @@
             </table>
         </div>
 
-        {{-- Footer: "Showing X to Y of Z entries" + pagination, matches System Users page --}}
+        {{-- Footer --}}
         @if(method_exists($jobs, 'total') && $jobs->total() > 0)
         <div class="dt-footer">
             <span>Showing {{ $jobs->firstItem() }} to {{ $jobs->lastItem() }} of {{ $jobs->total() }} entries</span>
