@@ -55,3 +55,11 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class);
     
 });
+
+// deddung 
+
+use App\Http\Controllers\WeddingController;
+
+// សម្រាប់ Wedding RSVP
+Route::get('/wedding', [WeddingController::class, 'index'])->name('wedding.index');
+Route::post('/wedding/rsvp', [WeddingController::class, 'rsvp'])->name('wedding.rsvp');
