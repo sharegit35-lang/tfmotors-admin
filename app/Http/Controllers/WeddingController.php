@@ -8,26 +8,21 @@ use Illuminate\Support\Facades\Log;
 
 class WeddingController extends Controller
 {
-    // សម្រាប់បង្ហាញទំព័រមង្គលការ
     public function index()
     {
         return view('wedding.index');
     }
 
-    // សម្រាប់ទទួលទិន្នន័យពេលភ្ញៀវចុច RSVP
     public function rsvp(Request $request)
     {
-        // ១. ពិនិត្យទិន្នន័យឱ្យប្រាកដថាភ្ញៀវបានបំពេញ
         $request->validate([
             'guest_name' => 'required|string|max:255',
-            'pax'        => 'required|string', // ចាប់យកជម្រើសចំនួនមនុស្ស
+            'pax'        => 'required|string',
         ]);
 
         try {
-            // URL Webhook របស់បងនៅ Make.com
             $webhookUrl = "https://hook.eu1.make.com/rwsy8y7epiyhmr3aflclhjtgxtpkd8jl";
 
-            // បំប្លែងទិន្នន័យ PAX ជាពាក្យពេចន៍សម្រាប់ Telegram
             $paxStatus = "";
             if ($request->pax == '1') {
                 $paxStatus = "មកម្នាក់ឯង 🧍";
@@ -37,25 +32,20 @@ class WeddingController extends Controller
                 $paxStatus = "មិនអាចចូលរួមបានទេ 🙏";
             }
 
-            // ២. រៀបចំសារ (Message) សម្រាប់ផ្ញើទៅ Telegram
-            $message = "🎉 *មានភ្ញៀវបញ្ជាក់ការចូលរួម (RSVP)*\n";
-            $message .= "──────────────────\n";
-            $message .= "👤 *ឈ្មោះភ្ញៀវ:* " . $request->guest_name . "\n";
-            $message .= "🎟 *ស្ថានភាព:* " . $paxStatus . "\n";
-            $message .= "──────────────────\n";
+            // រៀបចំសារឱ្យស្អាត (ជៀសវាងសញ្ញាស្មុគស្មាញ)
+            $message = "🎉 *មានភ្ញៀវបញ្ជាក់ការចូលរួម (RSVP)*\n\n";
+            $message .= "👤 *ឈ្មោះ:* " . $request->guest_name . "\n";
+            $message .= "🎟 *ស្ថានភាព:* " . $paxStatus . "\n\n";
             $message .= "មង្គលការ ពេជ្រ & ធីតា 💍";
 
-            // ៣. បាញ់ទិន្នន័យទៅកាន់ Make.com
+            // បាញ់ទិន្នន័យទៅ Make.com
+            // ប្រើ json() ជំនួស asForm() ពេលខ្លះ Make.com ងាយស្រួលអានទិន្នន័យជាង
             Http::withoutVerifying()
                 ->timeout(15)
-                ->asForm()
                 ->post($webhookUrl, [
-                    'text'       => $message, // ទិន្នន័យនេះនឹងលោតចេញជាអក្សរក្នុង Telegram
-                    'guest_name' => $request->guest_name,
-                    'pax'        => $request->pax
+                    'text' => $message
                 ]);
 
-            // ៤. បញ្ជូនភ្ញៀវត្រឡប់មកវិញ ជាមួយសារជោគជ័យ (SweetAlert)
             return back()->with('success', 'សូមអរគុណ! ការបញ្ជាក់ចូលរួមរបស់អ្នកទទួលបានជោគជ័យ។');
 
         } catch (\Exception $e) {

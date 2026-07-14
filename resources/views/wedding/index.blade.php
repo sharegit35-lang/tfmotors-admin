@@ -10,8 +10,7 @@
     <title>Wedding Invitation | ឡុន ពេជ្រ & ជួប សុខធីតា</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ⚡️ ប្តូរមកប្រើហ្វុន Kantumruy Pro ជំនួស Bayon និង Moul */
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital@1&family=Inter:wght@300;400;500;600;700&family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bayon&family=Cormorant+Garamond:ital@1&family=Inter:wght@300;400;500;600;700&family=Moul&display=swap');
 
         :root{
             --color-bg-1:#fdfbf7;
@@ -22,6 +21,9 @@
             --color-gold-light:#c9a25c;
             --color-gold-deep:#8b6224;
             --color-line:#e8ddc7;
+            --color-blush:#f0c9c2;
+            --color-peach:#f6d9b8;
+            --color-ivory:#fbf6ee;
             --shadow-card:0 20px 60px -18px rgba(139,98,36,.28), 0 8px 24px -10px rgba(45,42,38,.10);
         }
 
@@ -29,15 +31,11 @@
         html{ -webkit-text-size-adjust: 100%; }
 
         body{
-            /* ⚡️ កំណត់ Kantumruy Pro ជាហ្វុនគោល */
-            font-family: 'Kantumruy Pro', 'Inter', sans-serif;
+            font-family:'Inter', sans-serif;
             color: var(--color-ink);
-            background:
-                radial-gradient(circle at 12% 8%, rgba(197,152,73,.14), transparent 45%),
-                radial-gradient(circle at 88% 92%, rgba(197,152,73,.16), transparent 45%),
-                linear-gradient(135deg, var(--color-bg-1) 0%, var(--color-bg-2) 50%, var(--color-bg-1) 100%);
-            background-size: 200% 200%, 200% 200%, 200% 200%;
-            animation: gradientShift 20s ease infinite;
+            background: var(--color-ivory);
+            position: relative;
+            overflow-x: hidden;
             min-height: 100vh;
             min-height: 100dvh;
             -webkit-font-smoothing: antialiased;
@@ -47,9 +45,60 @@
             padding-right: max(env(safe-area-inset-right), 0px);
         }
 
-        /* ⚡️ កំណត់ទម្ងន់អក្សរសម្រាប់ Kantumruy Pro ទៅតាមកន្លែងនីមួយៗ */
-        .font-khmer-title{ font-family: 'Kantumruy Pro', sans-serif; font-weight: 600; }
-        .font-khmer{ font-family: 'Kantumruy Pro', sans-serif; font-weight: 700; }
+        /* Modern soft-blur wedding background — floating colour blobs, bokeh-style */
+        .bg-blobs{
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .blob{
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(clamp(50px, 9vw, 110px));
+            opacity: .55;
+            will-change: transform;
+        }
+        .blob-1{
+            width: clamp(220px, 42vw, 460px); height: clamp(220px, 42vw, 460px);
+            top: -12%; left: -14%;
+            background: var(--color-gold-light);
+            animation: floatBlob 24s ease-in-out infinite;
+        }
+        .blob-2{
+            width: clamp(200px, 38vw, 420px); height: clamp(200px, 38vw, 420px);
+            top: -8%; right: -12%;
+            background: var(--color-blush);
+            animation: floatBlob 28s ease-in-out infinite reverse;
+            animation-delay: -6s;
+        }
+        .blob-3{
+            width: clamp(220px, 40vw, 440px); height: clamp(220px, 40vw, 440px);
+            bottom: -14%; left: -10%;
+            background: var(--color-peach);
+            animation: floatBlob 26s ease-in-out infinite;
+            animation-delay: -12s;
+        }
+        .blob-4{
+            width: clamp(180px, 34vw, 380px); height: clamp(180px, 34vw, 380px);
+            bottom: -10%; right: -8%;
+            background: var(--color-gold-deep);
+            opacity: .35;
+            animation: floatBlob 22s ease-in-out infinite reverse;
+            animation-delay: -3s;
+        }
+        @keyframes floatBlob{
+            0%, 100%{ transform: translate(0,0) scale(1); }
+            33%{ transform: translate(3%, 4%) scale(1.08); }
+            66%{ transform: translate(-3%, -2%) scale(.95); }
+        }
+        @media (max-width: 480px){
+            .blob{ opacity: .4; }
+        }
+
+        .font-khmer-title{ font-family:'Moul', cursive; }
+        .font-khmer{ font-family:'Bayon', cursive; }
         .font-amp{ font-family:'Cormorant Garamond', serif; font-style: italic; }
 
         .gold-gradient-text{
@@ -69,7 +118,6 @@
         .btn-gold:hover{ transform: translateY(-2px); box-shadow: 0 14px 28px -8px rgba(139,98,36,.45); }
         .btn-gold:active{ transform: translateY(0); filter: brightness(.97); }
 
-        @keyframes gradientShift{ 0%{background-position:0% 50%,0% 50%,0% 50%} 50%{background-position:100% 50%,100% 50%,100% 50%} 100%{background-position:0% 50%,0% 50%,0% 50%} }
         @keyframes shine{ to{ background-position: 200% center; } }
         @keyframes fadeInUp{ from{opacity:0; transform: translateY(18px);} to{opacity:1; transform: translateY(0);} }
 
@@ -79,7 +127,7 @@
 
         @media (prefers-reduced-motion: reduce){
             *, *::before, *::after{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-            body{ animation: none; }
+            .blob{ animation: none; }
         }
 
         .modern-input{
@@ -126,7 +174,14 @@
 </head>
 <body class="flex flex-col items-center justify-center px-3 py-6 sm:p-8">
 
-    <div class="relative w-full max-w-md sm:max-w-lg animate-item">
+    <div class="bg-blobs" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+        <span class="blob blob-4"></span>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md sm:max-w-lg animate-item">
         <div class="glass-card relative overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] p-[clamp(1.25rem,5vw,3rem)]">
 
             <span class="corner corner-tl"></span>
@@ -137,12 +192,12 @@
             <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[var(--color-gold-deep)] via-[var(--color-gold-light)] to-[var(--color-gold-deep)]"></div>
 
             <div class="text-center animate-item delay-1">
-                <h1 class="font-khmer text-[clamp(2.1rem,9vw,3.6rem)] leading-tight mb-[clamp(1.5rem,5vw,2.5rem)] gold-gradient-text tracking-wide">អាពាហ៍ពិពាហ៍</h1>
+                <h1 class="font-khmer-title text-[clamp(2.1rem,9vw,3.6rem)] leading-tight mb-[clamp(1.5rem,5vw,2.5rem)] gold-gradient-text tracking-wide">អាពាហ៍ពិពាហ៍</h1>
 
                 <div class="space-y-2 mb-8 sm:mb-10 relative">
                     <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-[var(--color-gold-light)] rounded-full blur-3xl opacity-10 -z-10"></div>
                     <p class="font-khmer-title text-[clamp(1.4rem,6vw,1.9rem)] text-gray-800 break-words">ឡុន ពេជ្រ</p>
-                    <p class="font-amp text-[var(--color-gold)] text-2xl font-light">&</p>
+                    <p class="font-amp text-[var(--color-gold)] text-2xl font-light">&amp;</p>
                     <p class="font-khmer-title text-[clamp(1.4rem,6vw,1.9rem)] text-gray-800 break-words">ជួប សុខធីតា</p>
                 </div>
             </div>
@@ -150,7 +205,7 @@
             <div class="mb-8 sm:mb-10 text-center animate-item delay-2">
                 <div class="p-[clamp(1.1rem,4vw,1.75rem)] bg-white/60 rounded-2xl border border-[var(--color-line)] shadow-sm w-full transition-transform duration-300 hover:scale-[1.015]">
                     <p class="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-[var(--color-ink-soft)] mb-3 font-semibold">កាលបរិច្ឆេទ</p>
-                    <p class="text-[clamp(1.05rem,4.2vw,1.35rem)] font-bold text-gray-800 mb-2 leading-snug">ថ្ងៃអាទិត្យ ទី០៣ ខែមករា ឆ្នាំ២០២៧</p>
+                    <p class="text-[clamp(1.05rem,4.2vw,1.35rem)] font-bold text-gray-800 mb-2 leading-snug">ថ្ងៃ អាទិត្យ ទី ០៣ ខែ មករា ឆ្នាំ ២០២៧</p>
                     <p class="text-sm sm:text-base text-[var(--color-gold-deep)] font-medium">វេលាម៉ោង ៥:០០ ល្ងាច</p>
                 </div>
             </div>
@@ -198,16 +253,16 @@
                         @csrf
                         <div>
                             <label for="guest_name" class="sr-only">ឈ្មោះរបស់អ្នក</label>
-                            <input id="guest_name" type="text" name="guest_name" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក..." class="w-full p-4 modern-input rounded-xl font-medium" required autocomplete="name">
+                            <input id="guest_name" type="text" name="guest_name" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក..." class="w-full p-4 modern-input rounded-xl" required autocomplete="name">
                         </div>
 
                         <div class="relative">
                             <label for="pax" class="sr-only">ចំនួនអ្នកចូលរួម</label>
-                            <select id="pax" name="pax" class="w-full p-4 pr-11 modern-input rounded-xl text-gray-700 font-medium cursor-pointer" required>
+                            <select id="pax" name="pax" class="w-full p-4 pr-11 modern-input rounded-xl text-gray-700 cursor-pointer" required>
                                 <option value="" disabled selected>ជ្រើសរើសចំនួនអ្នកចូលរួម...</option>
                                 <option value="1">ចូលរួមម្នាក់ឯង</option>
                                 <option value="2">ចូលរួម ២ នាក់</option>
-                                <option value="0">សុំអភ័យទោស មិនអាចចូលរួមបានទេ</option>
+                                <option value="0">សុំអភ័យទោស មិនអាចចូលរួមបាន</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -232,8 +287,8 @@
             if (rsvpForm) {
                 rsvpForm.addEventListener('submit', function () {
                     Swal.fire({
-                        title: '<span style="font-family: \'Kantumruy Pro\', sans-serif;">កំពុងបញ្ជូន...</span>',
-                        html: '<p style="color:#8a8074;font-size:14px;font-family: \'Kantumruy Pro\', sans-serif;">សូមរង់ចាំបន្តិច...</p>',
+                        title: 'កំពុងបញ្ជូន...',
+                        html: '<p style="color:#8a8074;font-size:14px;">សូមរង់ចាំបន្តិច...</p>',
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         background: '#fffdf9',
@@ -245,20 +300,20 @@
             @if(session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: '<span style="font-family: \'Kantumruy Pro\', sans-serif;">អរគុណ!</span>',
-                    html: '<span style="font-family: \'Kantumruy Pro\', sans-serif;">{{ session('success') }}</span>',
+                    title: 'អរគុណ!',
+                    text: '{{ session('success') }}',
                     confirmButtonColor: '#b8863b',
-                    customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl px-6 font-bold' }
+                    customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl px-6' }
                 });
             @endif
 
             @if(session('error'))
                 Swal.fire({
                     icon: 'error',
-                    title: '<span style="font-family: \'Kantumruy Pro\', sans-serif;">សុំអភ័យទោស!</span>',
-                    html: '<span style="font-family: \'Kantumruy Pro\', sans-serif;">{{ session('error') }}</span>',
+                    title: 'សុំអភ័យទោស!',
+                    text: '{{ session('error') }}',
                     confirmButtonColor: '#ef4444',
-                    customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl px-6 font-bold' }
+                    customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl px-6' }
                 });
             @endif
         });
