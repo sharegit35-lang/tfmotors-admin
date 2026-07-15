@@ -56,10 +56,12 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     
 });
 
-// deddung 
 
-use App\Http\Controllers\WeddingController;
 
-// សម្រាប់ Wedding RSVP
+use App\Http\Controllers\WeddingController; // កុំភ្លេចហៅ Controller នេះមកប្រើផងបង
+
+// Route សម្រាប់បង្ហាញទំព័រវេបសាយ (Form)
 Route::get('/wedding', [WeddingController::class, 'index'])->name('wedding.index');
+
+// Route សម្រាប់បញ្ជូនទិន្នន័យ (កន្លែងដែល Error ទាមទារ)
 Route::post('/wedding/rsvp', [WeddingController::class, 'rsvp'])->name('wedding.rsvp');
