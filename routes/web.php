@@ -65,3 +65,5 @@ Route::get('/wedding', [WeddingController::class, 'index'])->name('wedding.index
 
 // Route សម្រាប់បញ្ជូនទិន្នន័យ (កន្លែងដែល Error ទាមទារ)
 Route::post('/wedding/rsvp', [WeddingController::class, 'rsvp'])->name('wedding.rsvp');
+
+Route::get('/wedding/admin-dashboard', [WeddingController::class, 'dashboard'])->name('wedding.dashboard');
