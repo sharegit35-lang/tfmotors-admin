@@ -21,7 +21,7 @@ class WeddingController extends Controller
         ]);
 
         try {
-            $webhookUrl = "https://hook.eu1.make.com/rwsy8y7epiyhmr3aflclhjtgxtpkd8jl";
+            $webhookUrl = "https://hook.eu1.make.com/ybp08rordxinf5ywqthjsvc1vdyy0mqu";
 
             $paxStatus = "";
             if ($request->pax == '1') {
@@ -32,25 +32,25 @@ class WeddingController extends Controller
                 $paxStatus = "មិនអាចចូលរួមបានទេ 🙏";
             }
 
-            // រៀបចំសារឱ្យស្អាត (ជៀសវាងសញ្ញាស្មុគស្មាញ)
             $message = "🎉 *មានភ្ញៀវបញ្ជាក់ការចូលរួម (RSVP)*\n\n";
             $message .= "👤 *ឈ្មោះ:* " . $request->guest_name . "\n";
             $message .= "🎟 *ស្ថានភាព:* " . $paxStatus . "\n\n";
             $message .= "មង្គលការ ពេជ្រ & ធីតា 💍";
 
-            // បាញ់ទិន្នន័យទៅ Make.com
-            // ប្រើ json() ជំនួស asForm() ពេលខ្លះ Make.com ងាយស្រួលអានទិន្នន័យជាង
+            // កែសម្រួលត្រង់នេះ៖ បាញ់ទិន្នន័យទៅជាដុំៗ ដើម្បីឱ្យ Make.com ស្គាល់អថេរ
             Http::withoutVerifying()
                 ->timeout(15)
                 ->post($webhookUrl, [
-                    'text' => $message
+                    'guest_name' => $request->guest_name, // បន្ថែមវាទៅ
+                    'pax_status' => $paxStatus,           // បន្ថែមវាទៅ
+                    'text'       => $message              // រក្សាទុកដដែល
                 ]);
 
-            return back()->with('success', 'សូមអរគុណ! ការបញ្ជាក់ចូលរួមរបស់អ្នកទទួលបានជោគជ័យ។');
+            return back()->with('success', 'សូមអរគុណ!');
 
         } catch (\Exception $e) {
             Log::error('Wedding RSVP Error: ' . $e->getMessage());
-            return back()->with('error', 'មានបញ្ហាបច្ចេកទេស សូមសាកល្បងម្ដងទៀត។');
+            return back()->with('error', 'មានបញ្ហា។');
         }
     }
 }
