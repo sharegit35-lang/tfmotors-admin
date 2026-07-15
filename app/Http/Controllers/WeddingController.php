@@ -37,13 +37,14 @@ class WeddingController extends Controller
             $message .= "🎟 *ស្ថានភាព:* " . $paxStatus . "\n\n";
             $message .= "មង្គលការ ពេជ្រ & ធីតា 💍";
 
-            // កែសម្រួលត្រង់នេះ៖ បាញ់ទិន្នន័យទៅជាដុំៗ ដើម្បីឱ្យ Make.com ស្គាល់អថេរ
+            // បាញ់ទិន្នន័យទៅ Make.com ជាទម្រង់ Form (ងាយស្រួលឱ្យ Make.com អានដាច់)
             Http::withoutVerifying()
+                ->asForm() 
                 ->timeout(15)
                 ->post($webhookUrl, [
-                    'guest_name' => $request->guest_name, // បន្ថែមវាទៅ
-                    'pax_status' => $paxStatus,           // បន្ថែមវាទៅ
-                    'text'       => $message              // រក្សាទុកដដែល
+                    'guest_name' => $request->guest_name,
+                    'pax_status' => $paxStatus,
+                    'text'       => $message
                 ]);
 
             return back()->with('success', 'សូមអរគុណ!');
