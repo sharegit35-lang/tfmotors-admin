@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Models\Rsvp; // កុំភ្លេចហៅ Model មកប្រើនៅត្រង់នេះ
+use App\Models\Rsvp; 
 
 class WeddingController extends Controller
 {
@@ -25,7 +25,7 @@ class WeddingController extends Controller
             $webhookUrl = "https://hook.eu1.make.com/ybp08rordxinf5ywqthjsvc1vdyy0mqu";
 
             $paxStatus = "";
-            $paxNumber = 0; // បង្កើតអថេរនេះសម្រាប់ Save លេខចូល Database ងាយស្រួលបូកសរុប
+            $paxNumber = 0; 
 
             if ($request->pax == '1') {
                 $paxStatus = "មកម្នាក់ឯង 🧍";
@@ -43,13 +43,13 @@ class WeddingController extends Controller
             $message .= "🎟 *ស្ថានភាព:* " . $paxStatus . "\n\n";
             $message .= "មង្គលការ ពេជ្រ & ធីតា 💍";
 
-            // ១. រក្សាទុកទិន្នន័យចូលក្នុង Database សិន
+            // ១. Save ទិន្នន័យចូល Database (តារាង rsvps ត្រូវតែមាន id ជា Primary Key & Auto Increment)
             Rsvp::create([
                 'guest_name' => $request->guest_name,
                 'pax'        => $paxNumber
             ]);
 
-            // ២. បាញ់ទិន្នន័យទៅ Make.com ជាទម្រង់ Form (Telegram Notification)
+            // ២. បាញ់ទិន្នន័យទៅ Webhook របស់ Make.com
             Http::withoutVerifying()
                 ->asForm() 
                 ->timeout(15)
@@ -63,25 +63,20 @@ class WeddingController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Wedding RSVP Error: ' . $e->getMessage());
-            return back()->with('error', 'មានបញ្ហា។');
+            // ចាប់ Error ពិតប្រាកដបង្ហាញលើ UI ដើម្បីងាយស្រួលជួសជុលពេលមានបញ្ហា Server
+            return back()->with('error', 'Server Error: ' . $e->getMessage());
         }
     }
     
-    // (ជម្រើស) Function សម្រាប់ទំព័រ Admin Dashboard ទុកមើលចំនួនសរុប
+    // Function សម្រាប់ផ្ទាំង Admin Dashboard 
     public function dashboard()
     {
-        // ១. សរុបចំនួនភ្ញៀវដែលនឹងមកផ្ទាល់ (បូកចំនួន pax ទាំងអស់)
         $totalGuests = Rsvp::sum('pax'); 
-        
-        // ២. រាប់ចំនួនសំបុត្រ/អ្នកដែលបានចុះឈ្មោះ តាមប្រភេទនីមួយៗ
         $comeOne = Rsvp::where('pax', 1)->count();
         $comeTwo = Rsvp::where('pax', 2)->count();
         $cannotCome = Rsvp::where('pax', 0)->count();
-
-        // ៣. ទាញទិន្នន័យបញ្ជីឈ្មោះភ្ញៀវទាំងអស់មកបង្ហាញ (ពីថ្មីទៅចាស់)
         $allRsvps = Rsvp::latest()->get(); 
     
-        // បោះទិន្នន័យទាំងអស់នេះទៅកាន់ទំព័រ UI
         return view('wedding.dashboard', compact('totalGuests', 'comeOne', 'comeTwo', 'cannotCome', 'allRsvps'));
     }
 }
