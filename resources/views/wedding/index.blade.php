@@ -12,301 +12,210 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bayon&family=Cormorant+Garamond:ital@1&family=Inter:wght@300;400;500;600;700&family=Moul&display=swap');
 
-        :root{
-            /* Professional Red & Gold Palette */
+        :root {
             --color-red-deep: #7f1d1d;
             --color-red-main: #b91c1c;
             --color-red-light: #ef4444;
             --color-gold: #d4af37;
-            --color-gold-light: #f3e5ab;
             --color-bg-base: #fdfaf9;
-            --color-line: #f3c9c9;
             --color-ink: #3f1818;
-            --color-ink-soft: rgba(127,29,29,.65);
-            --shadow-card: 0 20px 60px -18px rgba(153,27,27,.25), 0 8px 24px -10px rgba(127,29,29,.15);
+            --shadow-card: 0 24px 50px -12px rgba(127,29,29,0.15);
         }
 
-        *{ -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        html{ -webkit-text-size-adjust: 100%; }
-
-        body{
-            font-family:'Inter', sans-serif;
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
             color: var(--color-ink);
             background: var(--color-bg-base);
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            min-height: 100dvh;
             -webkit-font-smoothing: antialiased;
-            padding-top: max(env(safe-area-inset-top), 1rem);
-            padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-            padding-left: max(env(safe-area-inset-left), 0px);
-            padding-right: max(env(safe-area-inset-right), 0px);
+            padding: clamp(1rem, 4vw, 2rem) 1rem;
         }
 
-        /* Red & Gold floating blur background */
-        .bg-blobs{
-            position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-            background: linear-gradient(135deg, #fef2f2 0%, #fffbeb 100%);
+        /* Soft Minimalist Background */
+        .bg-gradient-mesh {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background: 
+                radial-gradient(at 0% 0%, rgba(254, 202, 202, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(253, 230, 138, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(252, 165, 165, 0.3) 0px, transparent 50%);
         }
-        .blob{ position:absolute; border-radius:50%; filter: blur(clamp(50px,9vw,110px)); opacity:.5; will-change:transform; }
-        .blob-1{ width:clamp(220px,42vw,460px); height:clamp(220px,42vw,460px); top:-10%; left:-10%; background:#fecaca; animation: floatBlob 24s ease-in-out infinite; }
-        .blob-2{ width:clamp(200px,38vw,420px); height:clamp(200px,38vw,420px); top:20%; right:-12%; background:#fde68a; animation: floatBlob 28s ease-in-out infinite reverse; animation-delay:-6s; }
-        .blob-3{ width:clamp(220px,40vw,440px); height:clamp(220px,40vw,440px); bottom:-14%; left:10%; background:#fca5a5; animation: floatBlob 26s ease-in-out infinite; animation-delay:-12s; }
-        @keyframes floatBlob{ 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(4%,5%) scale(1.05)} 66%{transform:translate(-3%,-2%) scale(.95)} }
-        @media (max-width:480px){ .blob{ opacity:.35; } }
 
-        .font-khmer-title{ font-family:'Moul', cursive; }
-        .font-khmer{ font-family:'Bayon', cursive; }
-        .font-amp{ font-family:'Cormorant Garamond', serif; font-style: italic; }
+        .font-khmer-title { font-family: 'Moul', cursive; }
+        .font-amp { font-family: 'Cormorant Garamond', serif; font-style: italic; }
 
-        .red-gradient-text{
-            background: linear-gradient(to right, var(--color-red-deep), var(--color-red-main), var(--color-red-deep));
+        .red-gradient-text {
+            background: linear-gradient(135deg, var(--color-red-deep), var(--color-red-main));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 200% auto; animation: shine 5s linear infinite;
         }
 
-        .btn-red-gradient{
-            background: linear-gradient(135deg, var(--color-red-main) 0%, var(--color-red-deep) 100%);
-            color:#fff; border:1px solid var(--color-red-deep);
-            transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1), filter .2s ease, opacity .2s ease;
-            min-height: 3.25rem;
-        }
-        .btn-red-gradient:hover{ transform: translateY(-2px); box-shadow: 0 14px 28px -8px rgba(153,27,27,.5); }
-        .btn-red-gradient:active{ transform: translateY(0); filter: brightness(.95); }
-        .btn-red-gradient:disabled{ opacity:.7; transform:none; cursor:not-allowed; }
-
-        @keyframes shine{ to{ background-position: 200% center; } }
-        @keyframes fadeInUp{ from{opacity:0; transform: translateY(18px);} to{opacity:1; transform: translateY(0);} }
-        @keyframes spin{ to{ transform: rotate(360deg); } }
-
-        .animate-item{ opacity:0; animation: fadeInUp .8s cubic-bezier(.16,1,.3,1) forwards; }
-        .delay-1{ animation-delay:.1s; } .delay-2{ animation-delay:.25s; }
-        .delay-3{ animation-delay:.4s; } .delay-4{ animation-delay:.55s; }
-
-        @media (prefers-reduced-motion: reduce){
-            *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
-            .blob{ animation: none; }
-        }
-
-        :focus-visible{ outline: 2px solid var(--color-red-main); outline-offset: 3px; border-radius: 4px; }
-
-        .field-label{
-            display:block; font-size:11px; text-transform:uppercase; letter-spacing:.15em;
-            font-weight:600; color: var(--color-ink-soft); margin-bottom:.6rem;
-        }
-
-        .modern-input{
-            background: rgba(255,255,255,.9);
-            border: 1px solid var(--color-line);
-            font-size: 16px;
-            color: var(--color-ink);
-            font-weight: 500;
-            transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
-            min-height: 3.25rem;
-        }
-        .modern-input::placeholder{ color: rgba(63,24,24,.4); font-weight:400; }
-        .modern-input:focus{
-            background:#fff; border-color: var(--color-red-main);
-            box-shadow: 0 0 0 4px rgba(185,28,28,.14); outline:none;
-        }
-        .input-icon{
-            position:absolute; left:1rem; top:50%; transform:translateY(-50%);
-            color: rgba(127,29,29,.4); pointer-events:none;
-        }
-
-        .glass-card{
-            background: rgba(255,255,255,.85);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(254,226,226,.8);
+        /* Glass Card - Cleaner & Whiter */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: var(--shadow-card);
+            border-radius: 2rem;
         }
 
-        .corner{ position:absolute; width:clamp(20px,6vw,36px); height:clamp(20px,6vw,36px); border:2px solid var(--color-gold); opacity:.8; pointer-events:none; }
-        .corner-tl{ top:clamp(.8rem,3vw,1.5rem); left:clamp(.8rem,3vw,1.5rem); border-right:none; border-bottom:none; }
-        .corner-tr{ top:clamp(.8rem,3vw,1.5rem); right:clamp(.8rem,3vw,1.5rem); border-left:none; border-bottom:none; }
-        .corner-bl{ bottom:clamp(.8rem,3vw,1.5rem); left:clamp(.8rem,3vw,1.5rem); border-right:none; border-top:none; }
-        .corner-br{ bottom:clamp(.8rem,3vw,1.5rem); right:clamp(.8rem,3vw,1.5rem); border-left:none; border-top:none; }
-
-        .divider-line{ height:1px; flex:1 1 auto; max-width:3.25rem; background: linear-gradient(to right, transparent, var(--color-red-main)); }
-        .divider-line.reverse{ background: linear-gradient(to left, transparent, var(--color-red-main)); }
-        .divider-diamond{ width:6px; height:6px; background:var(--color-gold); transform:rotate(45deg); border-radius:1px; flex-shrink:0; }
-
-        /* Modern segmented RSVP option cards (replaces native <select>) */
-        .pax-option{ display:block; cursor:pointer; }
-        .pax-card{
-            display:flex; align-items:center; gap:.85rem; min-height:3.25rem;
-            padding:.85rem 1.1rem; border:1.5px solid var(--color-line); border-radius:1rem;
-            background: rgba(255,255,255,.75);
-            transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+        /* Hero Image Arch */
+        .hero-arch {
+            border-radius: 12rem 12rem 0 0;
+            overflow: hidden;
+            position: relative;
         }
-        .pax-card:hover{ border-color: var(--color-red-light); }
-        .pax-icon{
-            width:2.15rem; height:2.15rem; border-radius:.7rem; flex-shrink:0;
-            display:flex; align-items:center; justify-content:center;
-            background: rgba(185,28,28,.08); color: var(--color-red-main);
+        .hero-arch::after {
+            content: '';
+            position: absolute; inset: 0;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12rem 12rem 0 0;
+            pointer-events: none;
         }
-        .pax-text{ font-weight:600; font-size:.92rem; color: var(--color-ink); }
-        .pax-check{
-            margin-left:auto; width:1.3rem; height:1.3rem; border-radius:50%; flex-shrink:0;
-            border:1.5px solid var(--color-line); display:flex; align-items:center; justify-content:center;
-            transition: border-color .2s ease, background .2s ease;
-        }
-        .pax-check svg{ width:.8rem; height:.8rem; opacity:0; transform:scale(.5); transition: opacity .2s ease, transform .2s ease; color:#fff; }
 
-        .pax-radio{ position:absolute; opacity:0; width:1px; height:1px; }
-        .pax-radio:checked + .pax-card{
+        /* Modern Inputs */
+        .field-label {
+            display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+            font-weight: 700; color: rgba(127,29,29,0.7); margin-bottom: 0.5rem;
+        }
+        .modern-input {
+            background: #f9f9f9; border: 1.5px solid transparent;
+            font-size: 16px; color: var(--color-ink); font-weight: 500;
+            transition: all 0.25s ease;
+        }
+        .modern-input:focus {
+            background: #fff; border-color: var(--color-red-main);
+            box-shadow: 0 4px 12px rgba(185,28,28,0.1); outline: none;
+        }
+
+        /* Segmented Radio Cards */
+        .pax-card {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1rem; border: 1.5px solid #f0f0f0; border-radius: 1rem;
+            background: #fff; cursor: pointer; transition: all 0.2s ease;
+        }
+        .pax-radio { position: absolute; opacity: 0; width: 0; height: 0; }
+        .pax-radio:checked + .pax-card {
             border-color: var(--color-red-main);
-            background: linear-gradient(135deg, rgba(185,28,28,.07), rgba(212,175,55,.10));
-            box-shadow: 0 6px 16px -8px rgba(185,28,28,.35);
+            background: rgba(185,28,28,0.03);
+            box-shadow: 0 4px 12px rgba(185,28,28,0.08);
         }
-        .pax-radio:checked + .pax-card .pax-check{ border-color: var(--color-red-main); background: var(--color-red-main); }
-        .pax-radio:checked + .pax-card .pax-check svg{ opacity:1; transform:scale(1); }
-        .pax-radio:focus-visible + .pax-card{ outline:2px solid var(--color-red-main); outline-offset:2px; }
-
-        .pax-card--decline .pax-icon{ background: rgba(107,114,128,.12); color:#6b7280; }
-        .pax-radio.pax-radio--decline:checked + .pax-card{
-            border-color:#9ca3af; background: rgba(107,114,128,.08); box-shadow:none;
+        .pax-radio:checked + .pax-card .pax-icon { background: var(--color-red-main); color: #fff; }
+        
+        .pax-icon {
+            width: 2.5rem; height: 2.5rem; border-radius: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            background: #f5f5f5; color: #888; transition: all 0.2s ease;
         }
-        .pax-radio.pax-radio--decline:checked + .pax-card .pax-check{ border-color:#6b7280; background:#6b7280; }
 
-        .spinner{ width:1.1rem; height:1.1rem; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation: spin .7s linear infinite; }
+        /* Gradient Button */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--color-red-main), var(--color-red-deep));
+            box-shadow: 0 8px 20px -6px rgba(153,27,27,0.5);
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(153,27,27,0.6); }
+        .spinner { width: 1.2rem; height: 1.2rem; border: 2.5px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Animation */
+        .fade-up { opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s ease forwards; }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center px-3 py-6 sm:p-8">
+<body class="flex flex-col items-center justify-center">
 
-    <div class="bg-blobs" aria-hidden="true">
-        <span class="blob blob-1"></span>
-        <span class="blob blob-2"></span>
-        <span class="blob blob-3"></span>
-    </div>
+    <div class="bg-gradient-mesh" aria-hidden="true"></div>
 
-    <div class="relative z-10 w-full max-w-md sm:max-w-lg animate-item">
-        <div class="glass-card relative overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] p-[clamp(1.25rem,5vw,3rem)]">
+    <div class="relative z-10 w-full max-w-md animate-item fade-up">
+        <div class="glass-card p-4 sm:p-6 lg:p-8">
 
-            <span class="corner corner-tl"></span>
-            <span class="corner corner-tr"></span>
-            <span class="corner corner-bl"></span>
-            <span class="corner corner-br"></span>
+            <div class="hero-arch w-full h-[250px] mb-8 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop" 
+                     alt="Pre-wedding Photo" 
+                     class="w-full h-full object-cover">
+            </div>
 
-            <div class="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-[var(--color-gold)] via-[#fffbeb] to-[var(--color-gold)]"></div>
-
-            <div class="text-center animate-item delay-1">
-                <h1 class="font-khmer-title text-[clamp(2.1rem,9vw,3.6rem)] leading-tight mb-[clamp(1.5rem,5vw,2.5rem)] red-gradient-text tracking-wide">អាពាហ៍ពិពាហ៍</h1>
-
-                <div class="space-y-2 mb-8 sm:mb-10 relative">
-                    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-[var(--color-red-main)] rounded-full blur-3xl opacity-10 -z-10"></div>
-                    <p class="font-khmer-title text-[clamp(1.4rem,6vw,1.9rem)] text-[#7f1d1d] break-words">ឡុន ពេជ្រ</p>
-                    <p class="font-amp text-[var(--color-gold)] text-3xl font-light">&amp;</p>
-                    <p class="font-khmer-title text-[clamp(1.4rem,6vw,1.9rem)] text-[#7f1d1d] break-words">ជួប សុខធីតា</p>
+            <div class="text-center mb-8 fade-up delay-1">
+                <p class="text-xs uppercase tracking-[0.2em] text-[var(--color-gold)] font-bold mb-3">សូមគោរពអញ្ជើញ</p>
+                <h1 class="font-khmer-title text-4xl mb-6 red-gradient-text">អាពាហ៍ពិពាហ៍</h1>
+                
+                <div class="flex items-center justify-center gap-4 text-[#7f1d1d]">
+                    <span class="font-khmer-title text-xl">ឡុន ពេជ្រ</span>
+                    <span class="font-amp text-[var(--color-gold)] text-3xl">&</span>
+                    <span class="font-khmer-title text-xl">ជួប សុខធីតា</span>
                 </div>
             </div>
 
-            <div class="mb-8 sm:mb-10 text-center animate-item delay-2">
-                <div class="p-[clamp(1.1rem,4vw,1.75rem)] bg-white/70 rounded-2xl border border-red-100 shadow-sm w-full transition-transform duration-300 hover:scale-[1.015]">
-                    <p class="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-red-800/60 mb-3 font-semibold">កាលបរិច្ឆេទ</p>
-                    <p class="text-[clamp(1.05rem,4.2vw,1.35rem)] font-bold text-[#7f1d1d] mb-2 leading-snug">ថ្ងៃ អាទិត្យ ទី ០៣ ខែ មករា ឆ្នាំ ២០២៧</p>
-                    <p class="text-sm sm:text-base text-[var(--color-gold)] font-bold">វេលាម៉ោង ៥:០០ ល្ងាច</p>
-                </div>
-            </div>
-
-            <div class="mb-10 sm:mb-12 text-center animate-item delay-3">
-                <div class="flex items-center justify-center gap-3 mb-5">
-                    <span class="divider-line"></span>
-                    <span class="divider-diamond"></span>
-                    <h3 class="text-[11px] sm:text-xs uppercase tracking-[0.15em] text-red-800 font-bold whitespace-nowrap">ទីតាំងមង្គលការ</h3>
-                    <span class="divider-diamond"></span>
-                    <span class="divider-line reverse"></span>
+            <div class="space-y-3 mb-10 fade-up delay-2">
+                <div class="flex items-center gap-4 p-4 bg-red-50/50 rounded-2xl border border-red-50">
+                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-700 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-[#7f1d1d]">អាទិត្យ ០៣ មករា ២០២៧</p>
+                        <p class="text-xs text-red-800/70 mt-1">វេលាម៉ោង ៥:០០ ល្ងាច</p>
+                    </div>
                 </div>
 
-                <div class="w-full aspect-[4/3] sm:aspect-[16/10] rounded-2xl overflow-hidden shadow-md border border-red-200 transition-shadow duration-300 hover:shadow-lg relative group">
-                    <iframe
-                        src="https://maps.app.goo.gl/hgbzaxoKcm4iv4T3A?g_st=ic"
-                        title="ទីតាំងកន្លែងរៀបការ លើ Google Maps"
-                        class="absolute inset-0 w-full h-full"
-                        style="border:0;"
-                        allowfullscreen
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                </div>
-
-                <a href="https://maps.app.goo.gl/hgbzaxoKcm4iv4T3A?g_st=ic" target="_blank" rel="noopener"
-                   class="mt-6 inline-flex items-center gap-2 text-[var(--color-red-main)] font-bold hover:text-[var(--color-red-deep)] transition-colors bg-white px-6 min-h-[2.75rem] rounded-full border border-red-200 shadow-sm hover:shadow-md">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    <span class="text-sm sm:text-base">បើកមើលក្នុង Google Maps</span>
+                <a href="https://maps.app.goo.gl/hgbzaxoKcm4iv4T3A?g_st=ic" target="_blank" class="flex items-center gap-4 p-4 bg-red-50/50 hover:bg-red-50 transition rounded-2xl border border-red-50 group">
+                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-700 shrink-0 group-hover:scale-110 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-[#7f1d1d]">ទីតាំងកន្លែងរៀបការ</p>
+                        <p class="text-xs text-red-800/70 mt-1">បើកមើលក្នុង Google Maps</p>
+                    </div>
+                    <svg class="w-5 h-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
             </div>
 
-            <div class="animate-item delay-4">
-                <div class="bg-white/90 p-[clamp(1.25rem,5vw,2rem)] rounded-[1.5rem] border border-red-100 shadow-sm">
-                    <div class="flex items-center justify-center gap-3 mb-6">
-                        <span class="divider-line"></span>
-                        <span class="divider-diamond"></span>
-                        <h3 class="text-center font-bold text-[#7f1d1d] text-base sm:text-lg whitespace-nowrap">តើអ្នកនឹងមកចូលរួមដែរឬទេ?</h3>
-                        <span class="divider-diamond"></span>
-                        <span class="divider-line reverse"></span>
+            <div class="pt-6 border-t border-gray-100 fade-up delay-3">
+                <h3 class="text-center font-bold text-[#7f1d1d] text-lg mb-6">បញ្ជាក់ការចូលរួម (RSVP)</h3>
+
+                <form id="rsvpForm" action="{{ route('wedding.rsvp') }}" method="POST" class="space-y-5">
+                    @csrf
+
+                    <div>
+                        <label for="guest_name" class="field-label">ឈ្មោះរបស់អ្នក</label>
+                        <input id="guest_name" type="text" name="guest_name" placeholder="ឧ. សុខ វាសនា..." class="w-full px-4 py-3.5 modern-input rounded-xl" required autocomplete="name">
                     </div>
 
-                    <form id="rsvpForm" action="{{ route('wedding.rsvp') }}" method="POST" class="space-y-5 sm:space-y-6">
-                        @csrf
+                    <fieldset class="pt-2">
+                        <legend class="field-label mb-3">ចំនួនអ្នកចូលរួម</legend>
+                        <div class="space-y-3">
+                            <label class="block relative">
+                                <input type="radio" name="pax" value="1" class="pax-radio" required>
+                                <div class="pax-card">
+                                    <div class="pax-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+                                    <span class="font-bold text-[#3f1818]">ចូលរួមម្នាក់ឯង</span>
+                                </div>
+                            </label>
 
-                        <div>
-                            <label for="guest_name" class="field-label">ឈ្មោះរបស់អ្នក</label>
-                            <div class="relative">
-                                <span class="input-icon">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-                                </span>
-                                <input id="guest_name" type="text" name="guest_name" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក..." class="w-full pl-11 pr-4 py-4 modern-input rounded-xl" required autocomplete="name">
-                            </div>
+                            <label class="block relative">
+                                <input type="radio" name="pax" value="2" class="pax-radio" required>
+                                <div class="pax-card">
+                                    <div class="pax-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"/><circle cx="9" cy="7" r="3"/><path d="M23 20v-1a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                                    <span class="font-bold text-[#3f1818]">ចូលរួម ២ នាក់</span>
+                                </div>
+                            </label>
+
+                            <label class="block relative">
+                                <input type="radio" name="pax" value="0" class="pax-radio" required>
+                                <div class="pax-card">
+                                    <div class="pax-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+                                    <span class="font-bold text-[#3f1818]">មិនអាចចូលរួមបាន</span>
+                                </div>
+                            </label>
                         </div>
+                    </fieldset>
 
-                        <fieldset>
-                            <legend class="field-label">ចំនួនអ្នកចូលរួម</legend>
-                            <div class="grid grid-cols-1 gap-3">
-
-                                <label class="pax-option relative">
-                                    <input type="radio" name="pax" value="1" class="pax-radio" required>
-                                    <span class="pax-card">
-                                        <span class="pax-icon">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-                                        </span>
-                                        <span class="pax-text">ចូលរួមម្នាក់ឯង</span>
-                                        <span class="pax-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
-                                    </span>
-                                </label>
-
-                                <label class="pax-option relative">
-                                    <input type="radio" name="pax" value="2" class="pax-radio" required>
-                                    <span class="pax-card">
-                                        <span class="pax-icon">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"/><circle cx="9" cy="7" r="3"/><path d="M23 20v-1a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                        </span>
-                                        <span class="pax-text">ចូលរួម ២ នាក់</span>
-                                        <span class="pax-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
-                                    </span>
-                                </label>
-
-                                <label class="pax-option relative">
-                                    <input type="radio" name="pax" value="0" class="pax-radio pax-radio--decline" required>
-                                    <span class="pax-card pax-card--decline">
-                                        <span class="pax-icon">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
-                                        </span>
-                                        <span class="pax-text">សុំអភ័យទោស មិនអាចចូលរួមបាន</span>
-                                        <span class="pax-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
-                                    </span>
-                                </label>
-
-                            </div>
-                        </fieldset>
-
-                        <button type="submit" id="rsvpSubmitBtn" class="w-full btn-red-gradient py-4 rounded-xl font-bold tracking-wide text-sm sm:text-base flex justify-center items-center gap-2 mt-2">
-                            <span id="rsvpBtnLabel">បញ្ជាក់ការចូលរួម (RSVP)</span>
-                            <svg id="rsvpBtnArrow" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" id="rsvpSubmitBtn" class="w-full btn-submit text-white py-4 rounded-xl font-bold tracking-wide mt-4 flex justify-center items-center gap-2">
+                        <span id="rsvpBtnLabel">បញ្ជូនព័ត៌មាន</span>
+                    </button>
+                </form>
             </div>
 
         </div>
@@ -314,27 +223,33 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        let isSubmitting = false;
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C')) || (e.ctrlKey && e.key === 'U') || e.key === 'F5' || (e.ctrlKey && e.key === 'R')) return false;
+        };
+        window.addEventListener('beforeunload', e => { if (!isSubmitting) { e.preventDefault(); e.returnValue = ''; } });
+
         document.addEventListener("DOMContentLoaded", function () {
             const rsvpForm = document.getElementById('rsvpForm');
             const submitBtn = document.getElementById('rsvpSubmitBtn');
             const btnLabel = document.getElementById('rsvpBtnLabel');
-            const btnArrow = document.getElementById('rsvpBtnArrow');
 
             if (rsvpForm) {
                 rsvpForm.addEventListener('submit', function () {
+                    isSubmitting = true;
                     submitBtn.disabled = true;
-                    btnArrow.style.display = 'none';
                     btnLabel.textContent = 'កំពុងបញ្ជូន...';
-                    const spinner = document.createElement('span');
-                    spinner.className = 'spinner';
+                    const spinner = document.createElement('div');
+                    spinner.className = 'spinner ml-2';
                     submitBtn.appendChild(spinner);
 
                     Swal.fire({
-                        title: 'កំពុងបញ្ជូន...',
-                        html: '<p style="color:#7f1d1d;font-size:14px;">សូមរង់ចាំបន្តិច...</p>',
+                        title: 'កំពុងដំណើរការ...',
                         allowOutsideClick: false,
                         showConfirmButton: false,
-                        background: '#fffdf9',
+                        background: '#fff',
                         didOpen: () => { Swal.showLoading(); }
                     });
                 });
@@ -343,20 +258,20 @@
             @if(session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'អរគុណ!',
+                    title: 'ទទួលបានជោគជ័យ!',
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#b91c1c',
-                    customClass: { popup: 'rounded-2xl border border-red-100', confirmButton: 'rounded-xl px-6' }
+                    customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl px-8 py-3' }
                 });
             @endif
 
             @if(session('error'))
                 Swal.fire({
                     icon: 'error',
-                    title: 'សុំអភ័យទោស!',
+                    title: 'មានបញ្ហា!',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#ef4444',
-                    customClass: { popup: 'rounded-2xl border border-red-100', confirmButton: 'rounded-xl px-6' }
+                    customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-xl px-8 py-3' }
                 });
             @endif
         });
