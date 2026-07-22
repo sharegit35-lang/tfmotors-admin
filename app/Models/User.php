@@ -3,19 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use MongoDB\Laravel\Eloquent\Model; // ហៅយក Class របស់ MongoDB Model ត្រឹមត្រូវ
+use Illuminate\Foundation\Auth\User as Authenticatable; // ប្រើ Standard Authenticatable របស់ Laravel
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Auth\Authenticatable;
 
-class User extends Model implements AuthenticatableContract
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Authenticatable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    protected $connection = 'mongodb';
-    protected $table = 'users'; // ជំនាន់ v5.0 ប្រើ $table ជំនួស $collection
+    protected $connection = 'mysql'; // ឬលុបចោលដើម្បីប្រើ Default connection
+    protected $table = 'users';
 
     protected $fillable = [
         'name',
