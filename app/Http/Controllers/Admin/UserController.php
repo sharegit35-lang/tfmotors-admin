@@ -12,9 +12,6 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class UserController extends Controller
 {
-    // អនុញ្ញាតឲ្យតែអ្នកមានសិទ្ធិជា Admin ប៉ុណ្ណោះទើបអាចប្រើ Controller នេះបាន
-
-
     public function index()
     {
         // ទាញយក User ទាំងអស់ ព្រមទាំងសិទ្ធិរបស់ពួកគេ
@@ -24,7 +21,7 @@ class UserController extends Controller
 
     public function create()
     {
-        // ទាញយកឈ្មោះសិទ្ធិ (Admin, Staff) ដើម្បីបង្ហាញក្នុង Dropdown
+        // ទាញយកឈ្មោះសិទ្ធិ (Admin, Staff, Driver...) ដើម្បីបង្ហាញក្នុង Dropdown
         $roles = Role::pluck('name', 'name')->all();
         return view('admin.users.create', compact('roles'));
     }
@@ -35,17 +32,19 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
+            'department' => 'nullable|string|max:255', // បន្ថែម Validation សម្រាប់ department
             'role' => 'required' // តម្រូវឲ្យរើសសិទ្ធិមួយ
         ]);
 
-        // បង្កើតគណនីថ្មី
+        // បង្កើតគណនីថ្មី (រួមទាំង department)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'department' => $request->department,
         ]);
 
-        // ភ្ជាប់សិទ្ធិទៅឲ្យគណនីថ្មីនោះ
+        // ភ្ជាប់សិទ្ធិទៅឲ្យគណនីថ្មីនោះ (ឧ. Admin, Driver, Employee)
         $user->assignRole($request->role);
 
         return redirect()->route('admin.users.index')
@@ -80,11 +79,13 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
+            'department' => 'nullable|string|max:255', // បន្ថែម Validation សម្រាប់ department
             'role' => 'required'
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->department = $request->department; // Update department
         
         // ប្រសិនបើមានការវាយបញ្ជូលលេខសម្ងាត់ថ្មី ទើបធ្វើការ Update
         if($request->password){

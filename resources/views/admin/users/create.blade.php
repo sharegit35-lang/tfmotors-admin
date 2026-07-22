@@ -300,7 +300,7 @@
 
         <p class="card-section-label">Account Details</p>
 
-        <div class="field-grid mb-8">
+        <div class="field-grid mb-6">
             <div class="form-group animate-item-1">
                 <label class="form-label">Full Name <span class="text-rose-500">*</span></label>
                 <div class="input-shell">
@@ -317,6 +317,19 @@
                     <input type="email" name="email" class="form-input" value="{{ old('email') }}" placeholder="user@tfmotors.com" required>
                 </div>
                 @error('email') <p class="error-text">{{ $message }}</p> @enderror
+            </div>
+        </div>
+
+        <!-- Department Field Added Here -->
+        <div class="field-grid mb-6">
+            <div class="form-group animate-item-1">
+                <label class="form-label">Department / ផ្នែក</label>
+                <div class="input-shell">
+                    <svg class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <input type="text" name="department" class="form-input" value="{{ old('department') }}" placeholder="Ex: Sales, IT, HR, Logistics">
+                </div>
+                <p class="helper-text">ផ្នែកឬដេប៉ាតឺម៉ង់របស់បុគ្គលិក (សម្រាប់ប្រើប្រាស់ពេលស្នើសុំឡាន)</p>
+                @error('department') <p class="error-text">{{ $message }}</p> @enderror
             </div>
         </div>
 

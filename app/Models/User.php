@@ -6,12 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles; // ១. ទាញយកមុខងារសិទ្ធិ (Roles) មកប្រើ
+use Laravel\Sanctum\HasApiTokens; // ១. បន្ថែម HasApiTokens សម្រាប់បង្កើត Token តាម API
+use Spatie\Permission\Traits\HasRoles; // មុខងារសិទ្ធិ (Roles) របស់អ្នក
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles; // ២. បន្ថែមពាក្យ HasRoles នៅទីនេះ
+    use HasApiTokens, HasFactory, Notifiable, HasRoles; // ២. បន្ថែម HasApiTokens នៅទីនេះ
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'department', // បន្ថែម department ដើម្បីឱ្យវាអាច save ចូល database បាន
     ];
 
     /**

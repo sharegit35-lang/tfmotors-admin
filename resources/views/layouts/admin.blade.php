@@ -167,11 +167,28 @@
                     </span>
                 </a>
 
+                {{-- Car Requests (Logistics & Transport) --}}
+                <a href="{{ route('admin.requests.index') }}"
+                   class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl font-medium mt-1.5
+                          {{ request()->routeIs('admin.requests.*')
+                              ? 'active bg-white/10 text-white'
+                              : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                    <svg class="icon" style="width: 19px; height: 19px; color: var(--gold-light);" viewBox="0 0 24 24">
+                        <path d="M5 17h14v2H5zM19 11l-2-4H7L5 11v6h14v-6zM3 13h18v4H3z"/>
+                        <circle cx="7.5" cy="15.5" r="1.5"/>
+                        <circle cx="16.5" cy="15.5" r="1.5"/>
+                    </svg>
+                    <span>
+                        Car Requests
+                        <span class="block text-[10px] font-normal text-slate-400 leading-none mt-0.5">សំណើសុំរថយន្ត</span>
+                    </span>
+                </a>
+
                 {{-- Employees dropdown group --}}
                 <div>
                     <button type="button"
                             @click="openGroup = (openGroup === 'employees' ? '' : 'employees')"
-                            class="nav-link w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium
+                            class="nav-link w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium mt-1.5
                                    {{ request()->routeIs('admin.employees.*')
                                        ? 'active bg-white/10 text-white'
                                        : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
@@ -239,7 +256,7 @@
                 <div>
                     <button type="button"
                             @click="openGroup = (openGroup === 'assets' ? '' : 'assets')"
-                            class="nav-link w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium
+                            class="nav-link w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-medium mt-1.5
                                    {{ request()->routeIs('admin.assets.*')
                                        ? 'active bg-white/10 text-white'
                                        : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
